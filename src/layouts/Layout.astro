@@ -3,19 +3,44 @@ import '../styles/global.css';
 
 interface Props {
 	title?: string;
+	description?: string;
 }
 
-const { title = 'lAIpzig Meetup' } = Astro.props;
+const {
+	title = 'lAIpzig Meetup — an AI meetup in Leipzig',
+	description =
+		'An AI meetup in Leipzig. Agents, harnesses, models, and whatever you dragged in half-working. No gatekeeping, no required background.',
+} = Astro.props;
 ---
 
 <html lang="en">
 	<head>
+		<script is:inline>
+			// Set before first paint: the scroll-reveal styles hook off .js so the
+			// page degrades to fully visible when scripts don't run.
+			document.documentElement.classList.add('js');
+		</script>
 		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
+
 		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta name="theme-color" content="#08060F" />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:locale" content="en" />
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@75..150,300..900&family=Archivo:wght@400..700&family=Martian+Mono:wght@400..600&display=swap"
+		/>
 	</head>
 	<body>
 		<slot />

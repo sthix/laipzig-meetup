@@ -1,0 +1,140 @@
+---
+import SectionHead from './SectionHead.astro';
+import { TOPICS } from '../data/meetup';
+---
+
+<section class="section" id="topics">
+	<div class="shell">
+		<SectionHead
+			label="What comes up"
+			note="Entries staggered in the order the field invented them"
+		/>
+
+		<ul class="voices">
+			{
+				TOPICS.map((topic, i) => (
+					<li
+						class="voice rise"
+						style={`--i: ${i}; --rise-delay: ${i * 70}ms`}
+					>
+						<span class="entry" aria-hidden="true" />
+						<h3 class="name">{topic.name}</h3>
+						<p class="note">{topic.note}</p>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</section>
+
+<style>
+	.section {
+		position: relative;
+		z-index: 2;
+		background: var(--color-ink);
+		padding-block: 0 clamp(4.5rem, 12vw, 9rem);
+	}
+
+	.voices {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		border-top: 1px solid rgba(239, 233, 220, 0.12);
+	}
+
+	/* Each voice enters later and further in — a stretto, read top to bottom. */
+	.voice {
+		position: relative;
+		display: grid;
+		grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+		gap: clamp(1rem, 4vw, 3rem);
+		align-items: baseline;
+		padding: clamp(1.1rem, 2.4vw, 1.6rem) 0;
+		padding-left: calc(var(--i) * 2.7%);
+		border-bottom: 1px solid rgba(239, 233, 220, 0.12);
+		transition: padding-left 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	/* Tick marking where this voice comes in. */
+	.entry {
+		position: absolute;
+		left: calc(var(--i) * 2.7%);
+		top: 0;
+		width: 1px;
+		height: 100%;
+		background: var(--color-paper);
+		opacity: 0;
+		transform: scaleY(0.3);
+		transform-origin: top;
+		transition:
+			opacity 0.35s ease,
+			transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.voice:nth-child(3n + 1) .entry {
+		background: var(--color-cyan);
+	}
+	.voice:nth-child(3n + 2) .entry {
+		background: var(--color-magenta);
+	}
+	.voice:nth-child(3n + 3) .entry {
+		background: var(--color-yellow);
+	}
+
+	.name {
+		font-family: var(--font-display);
+		font-variation-settings: 'wdth' 100, 'wght' 620;
+		font-size: clamp(1.35rem, 3.2vw, 2.35rem);
+		line-height: 1.05;
+		letter-spacing: -0.015em;
+		margin: 0;
+		transition: font-variation-settings 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.note {
+		margin: 0;
+		color: var(--color-paper-3);
+		font-size: 0.9375rem;
+		line-height: 1.6;
+		max-width: 44ch;
+		text-wrap: pretty;
+		transition: color 0.3s ease;
+	}
+
+	.voice:hover {
+		padding-left: calc(var(--i) * 2.7% + 1.1rem);
+	}
+
+	.voice:hover .entry {
+		opacity: 1;
+		transform: scaleY(1);
+	}
+
+	.voice:hover .name {
+		font-variation-settings: 'wdth' 126, 'wght' 700;
+	}
+
+	.voice:hover .note {
+		color: var(--color-paper-2);
+	}
+
+	@media (max-width: 780px) {
+		.voice {
+			grid-template-columns: 1fr;
+			gap: 0.4rem;
+			padding-left: calc(var(--i) * 2.4%);
+		}
+
+		.voice:hover {
+			padding-left: calc(var(--i) * 2.4%);
+		}
+
+		.entry {
+			left: calc(var(--i) * 2.4%);
+		}
+
+		.name {
+			font-variation-settings: 'wdth' 100, 'wght' 640;
+		}
+	}
+</style>
