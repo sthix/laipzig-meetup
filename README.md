@@ -12,3 +12,14 @@ Whether you build with agents, tinker with harnesses, train models, or are just 
 - and everything adjacent
 
 No gatekeeping, no required background — just people who find this stuff interesting.
+
+## Development
+
+Built with [Astro](https://astro.build).
+
+```sh
+npm install      # install dependencies
+npm run dev      # start the dev server at localhost:4321
+npm run build    # build the production site to ./dist
+npm run preview  # preview the production build locally
+```
