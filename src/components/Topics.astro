@@ -7,23 +7,28 @@ import { TOPICS } from '../data/meetup';
 	<div class="shell">
 		<SectionHead
 			label="What comes up"
-			note="Entries staggered in the order the field invented them"
+			note="Open a topic to read more"
 		/>
 
-		<ul class="voices">
+		<div class="accordion">
 			{
 				TOPICS.map((topic, i) => (
-					<li
-						class="voice rise"
-						style={`--i: ${i}; --rise-delay: ${i * 70}ms`}
+					<details
+						class="item rise"
+						name="topics"
+						open={i === 0}
+						style={`--rise-delay: ${i * 70}ms`}
 					>
-						<span class="entry" aria-hidden="true" />
-						<h3 class="name">{topic.name}</h3>
-						<p class="note">{topic.note}</p>
-					</li>
+						<summary class="trigger">
+							<h3 class="name">{topic.name}</h3>
+						</summary>
+						<div class="answer">
+							<p class="note">{topic.note}</p>
+						</div>
+					</details>
 				))
 			}
-		</ul>
+		</div>
 	</div>
 </section>
 
@@ -35,60 +40,89 @@ import { TOPICS } from '../data/meetup';
 		padding-block: 0 clamp(4.5rem, 12vw, 9rem);
 	}
 
-	.voices {
-		list-style: none;
-		margin: 0;
-		padding: 0;
+	.accordion {
 		border-top: 1px solid rgba(239, 233, 220, 0.12);
 	}
 
-	/* Each voice enters later and further in — a stretto, read top to bottom. */
-	.voice {
-		position: relative;
-		display: grid;
-		grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
-		gap: clamp(1rem, 4vw, 3rem);
-		align-items: baseline;
-		padding: clamp(1.1rem, 2.4vw, 1.6rem) 0;
-		padding-left: calc(var(--i) * 2.7%);
+	.item {
 		border-bottom: 1px solid rgba(239, 233, 220, 0.12);
-		transition: padding-left 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
-	/* Tick marking where this voice comes in. */
-	.entry {
-		position: absolute;
-		left: calc(var(--i) * 2.7%);
-		top: 0;
-		width: 1px;
-		height: 100%;
-		background: var(--color-paper);
-		opacity: 0;
-		transform: scaleY(0.3);
-		transform-origin: top;
+	.trigger {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1.5rem;
+		padding: clamp(1.1rem, 2.4vw, 1.6rem) 0;
+		cursor: pointer;
+		list-style: none;
+		color: var(--color-paper);
+		user-select: none;
+	}
+
+	.trigger::-webkit-details-marker {
+		display: none;
+	}
+
+	.trigger::marker {
+		content: '';
+	}
+
+	.trigger::after {
+		content: '+';
+		flex: none;
+		display: grid;
+		place-items: center;
+		width: 1.8rem;
+		height: 1.8rem;
+		border: 1px solid rgba(239, 233, 220, 0.22);
+		font-family: var(--font-mono);
+		font-size: 1rem;
+		font-weight: 400;
+		line-height: 1;
+		color: var(--color-paper-3);
 		transition:
-			opacity 0.35s ease,
-			transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+			border-color 0.25s ease,
+			color 0.25s ease,
+			background-color 0.25s ease;
 	}
 
-	.voice:nth-child(3n + 1) .entry {
-		background: var(--color-cyan);
+	.item:nth-child(3n + 1) .trigger::after {
+		color: var(--color-cyan);
 	}
-	.voice:nth-child(3n + 2) .entry {
-		background: var(--color-magenta);
+
+	.item:nth-child(3n + 2) .trigger::after {
+		color: var(--color-magenta);
 	}
-	.voice:nth-child(3n + 3) .entry {
-		background: var(--color-yellow);
+
+	.item:nth-child(3n + 3) .trigger::after {
+		color: var(--color-yellow);
+	}
+
+	.item[open] .trigger::after {
+		content: '\2212';
+		border-color: currentColor;
+		background: rgba(239, 233, 220, 0.04);
 	}
 
 	.name {
+		min-width: 0;
 		font-family: var(--font-display);
-		font-variation-settings: 'wdth' 100, 'wght' 620;
+		font-variation-settings: 'wdth' 104, 'wght' 640;
 		font-size: clamp(1.35rem, 3.2vw, 2.35rem);
 		line-height: 1.05;
 		letter-spacing: -0.015em;
 		margin: 0;
-		transition: font-variation-settings 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+		transition: color 0.25s ease;
+	}
+
+	.trigger:hover .name,
+	.item[open] .name {
+		color: var(--color-paper-2);
+	}
+
+	.answer {
+		padding: 0 clamp(3.3rem, 7vw, 5rem) clamp(1.35rem, 3vw, 2rem) 0;
 	}
 
 	.note {
@@ -96,45 +130,8 @@ import { TOPICS } from '../data/meetup';
 		color: var(--color-paper-3);
 		font-size: 0.9375rem;
 		line-height: 1.6;
-		max-width: 44ch;
+		max-width: 58ch;
 		text-wrap: pretty;
-		transition: color 0.3s ease;
 	}
 
-	.voice:hover {
-		padding-left: calc(var(--i) * 2.7% + 1.1rem);
-	}
-
-	.voice:hover .entry {
-		opacity: 1;
-		transform: scaleY(1);
-	}
-
-	.voice:hover .name {
-		font-variation-settings: 'wdth' 126, 'wght' 700;
-	}
-
-	.voice:hover .note {
-		color: var(--color-paper-2);
-	}
-
-	@media (max-width: 780px) {
-		.voice {
-			grid-template-columns: 1fr;
-			gap: 0.4rem;
-			padding-left: calc(var(--i) * 2.4%);
-		}
-
-		.voice:hover {
-			padding-left: calc(var(--i) * 2.4%);
-		}
-
-		.entry {
-			left: calc(var(--i) * 2.4%);
-		}
-
-		.name {
-			font-variation-settings: 'wdth' 100, 'wght' 640;
-		}
-	}
 </style>
