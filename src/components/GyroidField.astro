@@ -1,0 +1,339 @@
+---
+/**
+ * The signature.
+ *
+ * A gyroid is a triply-periodic minimal surface defined by
+ *   sin x·cos y + sin y·cos z + sin z·cos x = 0
+ * — three sine voices, phase-shifted against each other, interlocking into one
+ * continuous surface. Counterpoint, in three dimensions. It is raymarched here
+ * as glass (the ray keeps going through the surface instead of stopping), and
+ * lit in the three process inks so the accumulated glow reads as three plates
+ * summing on the same sheet.
+ */
+---
+
+<canvas id="gyroid" aria-hidden="true"></canvas>
+<div class="fallback" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<style>
+	/* No WebGL (old hardware, blocked context, some VMs): a static painted
+	   field stands in, so the cut-through type still has something behind it. */
+	.fallback {
+		position: fixed;
+		inset: 0;
+		z-index: 0;
+		display: none;
+		pointer-events: none;
+		background:
+			radial-gradient(60% 45% at 22% 28%, rgba(0, 194, 232, 0.28), transparent 70%),
+			radial-gradient(55% 50% at 76% 38%, rgba(236, 0, 140, 0.24), transparent 72%),
+			radial-gradient(45% 40% at 50% 74%, rgba(255, 212, 71, 0.14), transparent 70%),
+			var(--color-ink);
+	}
+
+	:global(.no-gl) .fallback {
+		display: block;
+	}
+
+	#gyroid {
+		position: fixed;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 0;
+		display: block;
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 1.6s ease 0.15s;
+	}
+
+	#gyroid.is-live {
+		opacity: 1;
+	}
+
+	/* Dither over the whole field — kills banding in the dark falloff. */
+	.grain {
+		position: fixed;
+		inset: -50%;
+		z-index: 1;
+		pointer-events: none;
+		opacity: 0.05;
+		mix-blend-mode: overlay;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+		animation: drift 6s steps(4) infinite;
+	}
+
+	@keyframes drift {
+		0% {
+			transform: translate(0, 0);
+		}
+		25% {
+			transform: translate(-2%, 1%);
+		}
+		50% {
+			transform: translate(1%, -2%);
+		}
+		75% {
+			transform: translate(-1%, -1%);
+		}
+		100% {
+			transform: translate(0, 0);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.grain {
+			animation: none;
+		}
+	}
+</style>
+
+<script>
+	import {
+		LinearSRGBColorSpace,
+		Mesh,
+		OrthographicCamera,
+		PlaneGeometry,
+		Scene,
+		ShaderMaterial,
+		Vector2,
+		WebGLRenderer,
+	} from 'three';
+
+	function boot() {
+		const canvas = document.getElementById('gyroid') as HTMLCanvasElement | null;
+		if (!canvas) return;
+
+		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+		const vert = /* glsl */ `
+			void main() { gl_Position = vec4(position, 1.0); }
+		`;
+
+		const frag = /* glsl */ `
+			precision highp float;
+
+			uniform vec2  uRes;
+			uniform float uTime;
+			uniform vec2  uMouse;
+			uniform float uScroll;
+
+			// Process inks: cyan, magenta, yellow. The three plates.
+			const vec3 CY = vec3(0.000, 0.760, 0.910);
+			const vec3 MG = vec3(0.925, 0.000, 0.549);
+			const vec3 YL = vec3(1.000, 0.831, 0.278);
+
+			mat2 rot(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+
+			// Distance to a gyroid shell. bias opens/closes the surface,
+			// thick gives it a wall.
+			float gyroid(vec3 p, float scale, float thick, float bias) {
+				p *= scale;
+				return abs(dot(sin(p), cos(p.zxy)) - bias) / scale - thick;
+			}
+
+			// One voice, then two ever-finer counter-voices subtracted from it.
+			float map(vec3 p, float t) {
+				p.xy *= rot(p.z * 0.10 + t * 0.06);
+				float d = gyroid(p,  1.55, 0.010, 1.40 + 0.08 * sin(t * 0.17));
+				d -= gyroid(p,  4.72, 0.010, 0.30) * 0.30;
+				d -= gyroid(p, 14.30, 0.010, 0.30) * 0.10;
+				return d * 0.80;
+			}
+
+			// Three lobes, one per plate, summed. Cyclic in x.
+			vec3 ink(float x) {
+				float c = 0.5 + 0.5 * cos(6.28318 * x);
+				float m = 0.5 + 0.5 * cos(6.28318 * (x - 0.3333));
+				float y = 0.5 + 0.5 * cos(6.28318 * (x - 0.6666));
+				return CY * (c * c) + MG * (m * m) + YL * (y * y) * 0.55;
+			}
+
+			void main() {
+				vec2 uv = (gl_FragCoord.xy - 0.5 * uRes) / uRes.y;
+
+				// Scroll pushes the camera further down the lattice, and shifts
+				// the phase — the subject restated a fifth up.
+				float t = uTime * 0.20 + uScroll * 5.0;
+
+				vec3 ro = vec3(0.0, 0.0, t);
+				vec3 rd = normalize(vec3(uv, 0.86));
+				rd.yz *= rot(uMouse.y * 0.20);
+				rd.xz *= rot(uMouse.x * 0.28);
+
+				vec3  col  = vec3(0.0);
+				float dist = 0.0;
+				float luv  = length(uv);
+
+				for (int i = 0; i < 72; i++) {
+					vec3 p = ro + rd * dist;
+					float d = map(p, t);
+
+					// abs() keeps the ray travelling through the shell instead of
+					// terminating on it: the lattice reads as glass, not stone.
+					d = abs(d) + 0.006;
+
+					float glow = 0.0005 / d;
+					glow *= exp(-dist * 0.16);               // atmosphere
+					col += ink(p.z * 0.15 + t * 0.05 + luv * 0.25) * glow;
+
+					dist += d;
+					if (dist > 9.0) break;
+				}
+
+				col = col / (col + 1.4);                     // roll off the highlights
+
+				// Pull blown highlights back toward ink instead of paper white —
+				// nothing on this page is allowed to out-white the type.
+				float lum = dot(col, vec3(0.299, 0.587, 0.114));
+				col = max(mix(vec3(lum), col, 1.25), 0.0);   // extrapolated mix can go negative
+
+				col *= mix(0.10, 1.0, smoothstep(1.38, 0.16, luv));  // vignette
+				col = pow(col, vec3(0.94));                  // pow needs a non-negative base
+
+				// Dither the low end so the falloff doesn't band.
+				float n = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
+				col += (n - 0.5) * 0.012;
+
+				gl_FragColor = vec4(max(col, 0.0), 1.0);
+			}
+		`;
+
+		const uniforms = {
+			uRes: { value: new Vector2(1, 1) },
+			uTime: { value: 0 },
+			uMouse: { value: new Vector2(0, 0) },
+			uScroll: { value: 0 },
+		};
+
+		let renderer: WebGLRenderer;
+		try {
+			renderer = new WebGLRenderer({
+				canvas,
+				antialias: false,
+				alpha: false,
+				powerPreference: 'high-performance',
+			});
+			renderer.outputColorSpace = LinearSRGBColorSpace;
+		} catch {
+			// Hand off to the painted fallback and stop here.
+			document.documentElement.classList.add('no-gl');
+			return;
+		}
+
+		canvas.addEventListener('webglcontextlost', (e) => {
+			e.preventDefault();
+			document.documentElement.classList.add('no-gl');
+			canvas.classList.remove('is-live');
+		});
+
+		const scene = new Scene();
+		const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
+		scene.add(
+			new Mesh(
+				new PlaneGeometry(2, 2),
+				new ShaderMaterial({ vertexShader: vert, fragmentShader: frag, uniforms }),
+			),
+		);
+
+		// Raymarching is fill-rate bound, so pixels are the budget. Start
+		// conservative and give some back if the frame time allows.
+		let scale = Math.min(window.devicePixelRatio || 1, 1.25);
+		const MIN_SCALE = 0.5;
+
+		const resize = () => {
+			const w = window.innerWidth;
+			const h = window.innerHeight;
+			renderer.setPixelRatio(scale);
+			renderer.setSize(w, h, false);
+			uniforms.uRes.value.set(w * scale, h * scale);
+		};
+		resize();
+
+		// Mouse parallax, critically damped so it never feels twitchy.
+		const target = new Vector2(0, 0);
+		window.addEventListener(
+			'pointermove',
+			(e) => {
+				target.set(
+					(e.clientX / window.innerWidth) * 2 - 1,
+					(e.clientY / window.innerHeight) * 2 - 1,
+				);
+			},
+			{ passive: true },
+		);
+
+		let scrollTarget = 0;
+		const readScroll = () => {
+			scrollTarget = window.scrollY / Math.max(window.innerHeight, 1);
+		};
+		readScroll();
+		window.addEventListener('scroll', readScroll, { passive: true });
+		window.addEventListener('resize', () => {
+			resize();
+			readScroll();
+		});
+
+		let running = document.visibilityState === 'visible';
+		document.addEventListener('visibilitychange', () => {
+			running = document.visibilityState === 'visible';
+			if (running) last = performance.now();
+		});
+
+		let last = performance.now();
+		let elapsed = 0;
+		let slowFrames = 0;
+		let tick = 0;
+
+		// Which bands of the page actually show the lattice: the hero, and the
+		// window cut around the date. Everywhere else it is behind opaque ink.
+		const inWindow = () => {
+			const y = window.scrollY;
+			const h = window.innerHeight;
+			if (y < h * 1.1) return true;
+			const panel = document.getElementById('next');
+			if (!panel) return false;
+			const r = panel.getBoundingClientRect();
+			return r.top < h && r.bottom > 0;
+		};
+
+		const frame = (now: number) => {
+			requestAnimationFrame(frame);
+			if (!running) return;
+
+			const dt = Math.min((now - last) / 1000, 0.05);
+			last = now;
+
+			if (!reduced) elapsed += dt;
+			uniforms.uTime.value = elapsed;
+			uniforms.uScroll.value += (scrollTarget - uniforms.uScroll.value) * 0.06;
+			uniforms.uMouse.value.lerp(target, reduced ? 1 : 0.045);
+
+			// Off-window the lattice sits behind opaque sections. State keeps
+			// advancing above so it is never stale on return — we just stop
+			// paying for pixels on two frames out of three.
+			if (!inWindow() && ++tick % 3 !== 0) return;
+
+			renderer.render(scene, camera);
+
+			if (dt > 0.028 && scale > MIN_SCALE) {
+				if (++slowFrames > 12) {
+					scale = Math.max(MIN_SCALE, scale - 0.2);
+					slowFrames = 0;
+					resize();
+				}
+			} else {
+				slowFrames = 0;
+			}
+		};
+
+		requestAnimationFrame((now) => {
+			last = now;
+			canvas.classList.add('is-live');
+			frame(now);
+		});
+	}
+
+	boot();
+</script>

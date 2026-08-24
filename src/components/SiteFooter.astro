@@ -1,0 +1,137 @@
+---
+import { LINKS } from '../data/meetup';
+---
+
+<footer class="foot">
+	<div class="shell">
+		<div class="row">
+			<div class="cols">
+				<div class="col">
+					<span class="micro key">Find us</span>
+					<a href={LINKS.meetup}>Meetup</a>
+					<a href={LINKS.github}>GitHub</a>
+					<a href={LINKS.email}>hallo@laipzig.dev</a>
+				</div>
+
+				<div class="col">
+					<span class="micro key">Bring</span>
+					<p>A demo, a question, or nothing at all.</p>
+				</div>
+
+				<div class="col">
+					<span class="micro key">Where</span>
+					<p>Leipzig, Germany<br /><span class="coords">51.3397&deg; N, 12.3731&deg; E</span></p>
+				</div>
+			</div>
+
+			<p class="wordmark" aria-hidden="true">l<span>AI</span>pzig</p>
+		</div>
+
+		<p class="colophon">
+			Background: a gyroid minimal surface &mdash; three interlocking sine waves,
+			raymarched in real time. Set in Anybody, Archivo and Martian Mono.
+		</p>
+	</div>
+</footer>
+
+<style>
+	.foot {
+		position: relative;
+		z-index: 2;
+		background: var(--color-ink);
+		border-top: 1px solid rgba(239, 233, 220, 0.12);
+		padding-block: clamp(3rem, 7vw, 5rem) clamp(2rem, 4vw, 3rem);
+	}
+
+	.row {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: clamp(2rem, 6vw, 5rem);
+	}
+
+	.cols {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, auto));
+		gap: clamp(1.75rem, 5vw, 4rem);
+	}
+
+	.col {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		align-items: flex-start;
+	}
+
+	.key {
+		color: var(--color-paper-3);
+		margin-bottom: 0.35rem;
+	}
+
+	.col a {
+		font-size: 0.9375rem;
+		text-decoration: none;
+		color: var(--color-paper);
+		border-bottom: 1px solid rgba(239, 233, 220, 0.28);
+		padding-bottom: 1px;
+		transition:
+			color 0.2s ease,
+			border-color 0.2s ease;
+	}
+
+	.col a:hover {
+		color: var(--color-cyan);
+		border-color: var(--color-cyan);
+	}
+
+	.col p {
+		margin: 0;
+		font-size: 0.9375rem;
+		line-height: 1.55;
+		color: var(--color-paper-2);
+		max-width: 24ch;
+	}
+
+	.coords {
+		white-space: nowrap;
+		color: var(--color-paper-3);
+	}
+
+	.wordmark {
+		margin: 0;
+		font-family: var(--font-display);
+		font-variation-settings: 'wdth' 132, 'wght' 800;
+		font-size: clamp(1.5rem, 3.5vw, 2.75rem);
+		line-height: 0.9;
+		letter-spacing: -0.03em;
+		color: rgba(239, 233, 220, 0.14);
+		white-space: nowrap;
+	}
+
+	.wordmark span {
+		color: rgba(0, 194, 232, 0.4);
+	}
+
+	.colophon {
+		margin: clamp(2.5rem, 6vw, 4rem) 0 0;
+		padding-top: 1.25rem;
+		border-top: 1px solid rgba(239, 233, 220, 0.1);
+		font-family: var(--font-mono);
+		font-size: 0.625rem;
+		letter-spacing: 0.06em;
+		line-height: 1.9;
+		color: var(--color-paper-3);
+		max-width: 68ch;
+	}
+
+	@media (max-width: 860px) {
+		.row {
+			flex-direction: column-reverse;
+		}
+
+		.cols {
+			grid-template-columns: 1fr;
+			gap: 1.75rem;
+		}
+	}
+</style>

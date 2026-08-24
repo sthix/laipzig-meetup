@@ -1,9 +1,71 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import GyroidField from '../components/GyroidField.astro';
+import Hero from '../components/Hero.astro';
+import Thesis from '../components/Thesis.astro';
+import Topics from '../components/Topics.astro';
+import Evening from '../components/Evening.astro';
+import NextMeetup from '../components/NextMeetup.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 ---
 
 <Layout>
-	<main class="flex min-h-screen items-center justify-center p-8">
-		<h1 class="text-4xl font-bold tracking-tight">lAIpzig Meetup</h1>
+	<GyroidField />
+
+	<a class="skip" href="#why">Skip to content</a>
+
+	<Hero />
+
+	<main>
+		<Thesis />
+		<Topics />
+		<Evening />
+		<NextMeetup />
 	</main>
+
+	<SiteFooter />
 </Layout>
+
+<style is:global>
+	.skip {
+		position: absolute;
+		left: -9999px;
+		z-index: 20;
+		padding: 0.75rem 1rem;
+		background: var(--color-paper);
+		color: var(--color-ink);
+		font-family: var(--font-mono);
+		font-size: 0.6875rem;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		text-decoration: none;
+	}
+
+	.skip:focus {
+		left: 1rem;
+		top: 1rem;
+	}
+</style>
+
+<script>
+	// One reveal mechanic for the whole page.
+	const items = document.querySelectorAll<HTMLElement>('.rise');
+
+	if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && items.length) {
+		const io = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						entry.target.classList.add('is-in');
+						io.unobserve(entry.target);
+					}
+				}
+			},
+			{ rootMargin: '0px 0px -12% 0px', threshold: 0.1 },
+		);
+
+		items.forEach((el) => io.observe(el));
+	} else {
+		items.forEach((el) => el.classList.add('is-in'));
+	}
+</script>

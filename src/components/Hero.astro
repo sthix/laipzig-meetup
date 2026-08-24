@@ -1,0 +1,299 @@
+---
+import { NEXT } from '../data/meetup';
+---
+
+<header class="hero">
+	<div class="shell hero-inner">
+		<p class="micro hero-mark">
+			<span>51.3397&deg; N</span>
+			<span class="tick" aria-hidden="true"></span>
+			<span>12.3731&deg; E</span>
+			<span class="tick" aria-hidden="true"></span>
+			<span>Leipzig</span>
+		</p>
+
+		<h1 class="wordmark">
+			<span>l</span><span class="ai">AI</span><span>pzig</span>
+		</h1>
+
+		<p class="micro hero-sub">AI Meetup &mdash; open to anyone</p>
+
+		<p class="lede">
+			Agents, harnesses, models, and whatever you dragged in half&#8209;working.
+			No gatekeeping, no required background &mdash; just people who find this
+			stuff interesting.
+		</p>
+
+		<div class="actions">
+			<a class="btn btn-primary" href="#next">
+				Come to the next one
+				<span class="btn-date">{NEXT.short}</span>
+			</a>
+			<a class="btn btn-ghost" href="#topics">See what we talk about</a>
+		</div>
+	</div>
+
+	<a class="scroll-cue" href="#why" aria-label="Scroll to why this exists">
+		<span class="micro">Scroll</span>
+		<span class="cue-line" aria-hidden="true"></span>
+	</a>
+</header>
+
+<style>
+	.hero {
+		position: relative;
+		z-index: 2;
+		min-height: 100svh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding-block: clamp(6rem, 14vh, 9rem) clamp(5rem, 12vh, 7rem);
+	}
+
+	/* The scrim is banded, not flat: heavy where the small type sits, nearly
+	   open across the wordmark so the lattice stays visible through the cut. */
+	.hero::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		pointer-events: none;
+		background: linear-gradient(
+			to bottom,
+			rgba(8, 6, 15, 0.72) 0%,
+			rgba(8, 6, 15, 0.3) 20%,
+			rgba(8, 6, 15, 0.24) 46%,
+			rgba(8, 6, 15, 0.74) 62%,
+			rgba(8, 6, 15, 0.86) 100%
+		);
+	}
+
+	.hero-inner {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.hero-mark {
+		display: flex;
+		align-items: center;
+		gap: 0.85rem;
+		color: var(--color-paper-2);
+		margin: 0 0 clamp(1.25rem, 4vh, 2.5rem);
+		opacity: 0;
+		animation: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.05s forwards;
+	}
+
+	.tick {
+		width: 1.75rem;
+		height: 1px;
+		background: currentColor;
+		opacity: 0.45;
+	}
+
+	/* ---- Wordmark ------------------------------------------------------ */
+
+	/* At 'wdth' 142 the word measures 5.07x its font size, and the shell gives
+	   it 90vw (capped at 78rem). Sizing from that makes the wordmark set the
+	   measure of the page: it fills the column exactly, at every width. */
+	.wordmark {
+		font-family: var(--font-display);
+		font-size: min(17.4vw, 13.3rem);
+		line-height: 0.82;
+		letter-spacing: -0.035em;
+		margin: 0;
+		white-space: nowrap;
+		font-variation-settings: 'wdth' 142, 'wght' 800;
+		animation: register 1.5s cubic-bezier(0.19, 1, 0.22, 1) 0.15s backwards;
+	}
+
+	/* AI is not printed. It is a hole in the sheet, and the machine is behind it. */
+	.ai {
+		color: transparent;
+		-webkit-text-stroke: 0.015em rgba(239, 233, 220, 0.72);
+		paint-order: stroke fill;
+	}
+
+	/* The press coming into register: three plates drifting into alignment,
+	   the word widening out as it lands. */
+	@keyframes register {
+		0% {
+			font-variation-settings: 'wdth' 88, 'wght' 800;
+			opacity: 0;
+			filter: blur(6px);
+			text-shadow:
+				0.11em -0.06em 0 var(--color-cyan),
+				-0.09em 0.07em 0 var(--color-magenta),
+				0.04em 0.1em 0 var(--color-yellow);
+		}
+		38% {
+			opacity: 1;
+			filter: blur(0);
+		}
+		100% {
+			font-variation-settings: 'wdth' 142, 'wght' 800;
+			opacity: 1;
+			filter: blur(0);
+			text-shadow:
+				0 0 0 rgba(0, 194, 232, 0),
+				0 0 0 rgba(236, 0, 140, 0),
+				0 0 0 rgba(255, 212, 71, 0);
+		}
+	}
+
+	.hero-sub {
+		margin: clamp(0.9rem, 2.5vh, 1.6rem) 0 0;
+		color: var(--color-paper-2);
+		opacity: 0;
+		animation: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+	}
+
+	.lede {
+		max-width: 34ch;
+		margin: clamp(1.5rem, 4vh, 2.5rem) 0 0;
+		font-size: clamp(1.05rem, 1.35vw, 1.25rem);
+		line-height: 1.55;
+		color: var(--color-paper);
+		text-wrap: pretty;
+		opacity: 0;
+		animation: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.35s forwards;
+	}
+
+	/* ---- Actions ------------------------------------------------------- */
+
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: clamp(1.75rem, 4.5vh, 2.75rem);
+		opacity: 0;
+		animation: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
+	}
+
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.85rem 1.35rem;
+		font-family: var(--font-mono);
+		font-size: 0.6875rem;
+		font-weight: 500;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		text-decoration: none;
+		border: 1px solid;
+		transition:
+			background-color 0.25s ease,
+			color 0.25s ease,
+			border-color 0.25s ease,
+			transform 0.25s ease;
+	}
+
+	.btn:hover {
+		transform: translateY(-2px);
+	}
+
+	.btn-primary {
+		background: var(--color-paper);
+		border-color: var(--color-paper);
+		color: var(--color-ink);
+	}
+
+	.btn-primary:hover {
+		background: var(--color-cyan);
+		border-color: var(--color-cyan);
+		color: var(--color-ink);
+	}
+
+	.btn-date {
+		padding-left: 0.75rem;
+		border-left: 1px solid currentColor;
+		opacity: 0.55;
+		letter-spacing: 0.1em;
+	}
+
+	.btn-ghost {
+		border-color: rgba(239, 233, 220, 0.28);
+		color: var(--color-paper);
+	}
+
+	.btn-ghost:hover {
+		border-color: var(--color-paper);
+		background: rgba(239, 233, 220, 0.06);
+	}
+
+	/* ---- Scroll cue ---------------------------------------------------- */
+
+	.scroll-cue {
+		position: absolute;
+		left: 50%;
+		bottom: clamp(1.5rem, 4vh, 2.5rem);
+		transform: translateX(-50%);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.6rem;
+		text-decoration: none;
+		opacity: 0;
+		animation: fade-up 0.9s ease 1.9s forwards;
+	}
+
+	.cue-line {
+		width: 1px;
+		height: 2.5rem;
+		background: linear-gradient(
+			to bottom,
+			rgba(239, 233, 220, 0.5),
+			rgba(239, 233, 220, 0)
+		);
+	}
+
+	.scroll-cue:hover .micro {
+		color: var(--color-cyan);
+	}
+
+	@keyframes fade-up {
+		from {
+			opacity: 0;
+			transform: translateY(1rem);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	/* The coordinate strip is too long for the ticks below this width. */
+	@media (max-width: 560px) {
+		.hero-mark {
+			gap: 0.7rem;
+			letter-spacing: 0.16em;
+		}
+
+		.tick {
+			display: none;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.btn {
+			flex: 1 1 100%;
+			justify-content: space-between;
+		}
+
+		.scroll-cue {
+			display: none;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.wordmark,
+		.hero-mark,
+		.hero-sub,
+		.lede,
+		.actions,
+		.scroll-cue {
+			opacity: 1;
+			animation: none;
+		}
+	}
+</style>
