@@ -7,13 +7,13 @@ import { TOPICS } from '../data/meetup';
 	<div class="shell">
 		<SectionHead
 			label="What comes up"
-			note="Entries staggered in the order the field invented them"
+			note="In the order the field invented them"
 		/>
 
 		<ul class="voices">
 			{
 				TOPICS.map((topic, i) => (
-					<li class="voice rise" style={`--i: ${i}; --rise-delay: ${i * 70}ms`}>
+					<li class="voice rise" style={`--rise-delay: ${i * 70}ms`}>
 						<span class="entry" aria-hidden="true" />
 						<h3 class="name">{topic.name}</h3>
 						<p class="note">{topic.note}</p>
@@ -38,9 +38,10 @@ import { TOPICS } from '../data/meetup';
 		padding: 0;
 	}
 
-	/* Each voice enters later and further in — a stretto, read top to bottom.
-	   The rules that used to separate them are gone: whitespace and the
-	   staggered indent do the separating now. */
+	/* One flush left edge, top to bottom. The voices used to step further in
+	   as they entered; that indent moved every name and note along the x-axis
+	   and made the column impossible to read down. Whitespace separates them
+	   now, and nothing on this list moves horizontally. */
 	.voice {
 		position: relative;
 		display: grid;
@@ -48,14 +49,13 @@ import { TOPICS } from '../data/meetup';
 		gap: clamp(var(--space-2), 4vw, var(--space-6));
 		align-items: baseline;
 		padding: clamp(var(--space-3), 2.6vw, var(--space-5)) 0;
-		padding-left: calc(var(--i) * 2.7%);
-		transition: padding-left 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
-	/* Tick marking where this voice comes in — the only vertical mark left. */
+	/* Tick marking the hovered voice — the only vertical mark left, and it
+	   rides the same left edge for every row. */
 	.entry {
 		position: absolute;
-		left: calc(var(--i) * 2.7%);
+		left: 0;
 		top: 0;
 		width: 1px;
 		height: 100%;
@@ -101,10 +101,6 @@ import { TOPICS } from '../data/meetup';
 		transition: color 0.3s ease;
 	}
 
-	.voice:hover {
-		padding-left: calc(var(--i) * 2.7% + 1.1rem);
-	}
-
 	.voice:hover .entry {
 		opacity: 1;
 		transform: scaleY(1);
@@ -122,15 +118,6 @@ import { TOPICS } from '../data/meetup';
 		.voice {
 			grid-template-columns: 1fr;
 			gap: var(--space-1);
-			padding-left: calc(var(--i) * 2.4%);
-		}
-
-		.voice:hover {
-			padding-left: calc(var(--i) * 2.4%);
-		}
-
-		.entry {
-			left: calc(var(--i) * 2.4%);
 		}
 	}
 </style>
