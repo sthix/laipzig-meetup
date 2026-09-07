@@ -28,7 +28,7 @@ import { TOPICS } from '../data/meetup';
 	.section {
 		position: relative;
 		z-index: 2;
-		background: var(--color-ink);
+		background: var(--color-screen);
 		padding-block: 0 var(--section-gap);
 	}
 
@@ -51,31 +51,21 @@ import { TOPICS } from '../data/meetup';
 		padding: clamp(var(--space-3), 2.6vw, var(--space-5)) 0;
 	}
 
-	/* Tick marking the hovered voice — the only vertical mark left, and it
-	   rides the same left edge for every row. */
+	/* A cursor parked against the hovered row. One colour, because a cursor
+	   is one colour — this used to cycle through three. */
 	.entry {
 		position: absolute;
 		left: 0;
 		top: 0;
 		width: 1px;
 		height: 100%;
-		background: var(--color-paper);
+		background: var(--color-added);
 		opacity: 0;
 		transform: scaleY(0.3);
 		transform-origin: top;
 		transition:
 			opacity 0.35s ease,
 			transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-	}
-
-	.voice:nth-child(3n + 1) .entry {
-		background: var(--color-cyan);
-	}
-	.voice:nth-child(3n + 2) .entry {
-		background: var(--color-magenta);
-	}
-	.voice:nth-child(3n + 3) .entry {
-		background: var(--color-yellow);
 	}
 
 	/* 400 throughout. Hover opens the width axis, never the weight axis. */
@@ -92,7 +82,7 @@ import { TOPICS } from '../data/meetup';
 
 	.note {
 		margin: 0;
-		color: var(--color-paper-3);
+		color: var(--color-fg-3);
 		font-size: var(--text-body);
 		font-weight: var(--weight-body);
 		line-height: 1.5;
@@ -111,7 +101,7 @@ import { TOPICS } from '../data/meetup';
 	}
 
 	.voice:hover .note {
-		color: var(--color-paper-2);
+		color: var(--color-fg-2);
 	}
 
 	@media (max-width: 780px) {

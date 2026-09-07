@@ -7,8 +7,8 @@
  * — three sine voices, phase-shifted against each other, interlocking into one
  * continuous surface. Counterpoint, in three dimensions. It is raymarched here
  * as glass (the ray keeps going through the surface instead of stopping), and
- * lit in the three process inks so the accumulated glow reads as three plates
- * summing on the same sheet.
+ * lit in phosphor — green carrying most of it, amber and red surfacing only
+ * where the lattice folds back on itself.
  */
 ---
 
@@ -26,10 +26,10 @@
 		display: none;
 		pointer-events: none;
 		background:
-			radial-gradient(60% 45% at 22% 28%, rgba(0, 194, 232, 0.28), transparent 70%),
-			radial-gradient(55% 50% at 76% 38%, rgba(236, 0, 140, 0.24), transparent 72%),
-			radial-gradient(45% 40% at 50% 74%, rgba(255, 212, 71, 0.14), transparent 70%),
-			var(--color-ink);
+			radial-gradient(60% 45% at 22% 28%, rgba(75, 217, 122, 0.28), transparent 70%),
+			radial-gradient(55% 50% at 76% 38%, rgba(240, 97, 77, 0.24), transparent 72%),
+			radial-gradient(45% 40% at 50% 74%, rgba(224, 165, 60, 0.14), transparent 70%),
+			var(--color-screen);
 	}
 
 	:global(.no-gl) .fallback {
@@ -119,10 +119,10 @@
 			uniform vec2  uMouse;
 			uniform float uScroll;
 
-			// Process inks: cyan, magenta, yellow. The three plates.
-			const vec3 CY = vec3(0.000, 0.760, 0.910);
-			const vec3 MG = vec3(0.925, 0.000, 0.549);
-			const vec3 YL = vec3(1.000, 0.831, 0.278);
+			// Phosphor: the gutter's three colours, lit rather than printed.
+			const vec3 ADDED   = vec3(0.294, 0.851, 0.478);
+			const vec3 CHANGED = vec3(0.878, 0.647, 0.235);
+			const vec3 REMOVED = vec3(0.941, 0.380, 0.302);
 
 			mat2 rot(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
 
@@ -142,12 +142,15 @@
 				return d * 0.80;
 			}
 
-			// Three lobes, one per plate, summed. Cyclic in x.
-			vec3 ink(float x) {
-				float c = 0.5 + 0.5 * cos(6.28318 * x);
-				float m = 0.5 + 0.5 * cos(6.28318 * (x - 0.3333));
-				float y = 0.5 + 0.5 * cos(6.28318 * (x - 0.6666));
-				return CY * (c * c) + MG * (m * m) + YL * (y * y) * 0.55;
+			// Three lobes summed, cyclic in x. Green dominates and red is kept
+			// scarce, so the field reads as one screen rather than a rainbow.
+			vec3 phosphor(float x) {
+				float a = 0.5 + 0.5 * cos(6.28318 * x);
+				float c = 0.5 + 0.5 * cos(6.28318 * (x - 0.3333));
+				float r = 0.5 + 0.5 * cos(6.28318 * (x - 0.6666));
+				return ADDED * (a * a)
+				     + CHANGED * (c * c) * 0.62
+				     + REMOVED * (r * r) * 0.30;
 			}
 
 			void main() {
@@ -176,7 +179,7 @@
 
 					float glow = 0.0005 / d;
 					glow *= exp(-dist * 0.16);               // atmosphere
-					col += ink(p.z * 0.15 + t * 0.05 + luv * 0.25) * glow;
+					col += phosphor(p.z * 0.15 + t * 0.05 + luv * 0.25) * glow;
 
 					dist += d;
 					if (dist > 9.0) break;
@@ -184,8 +187,8 @@
 
 				col = col / (col + 1.4);                     // roll off the highlights
 
-				// Pull blown highlights back toward ink instead of paper white —
-				// nothing on this page is allowed to out-white the type.
+				// Pull blown highlights back down — nothing in the field is allowed
+				// to out-brighten the type in front of it.
 				float lum = dot(col, vec3(0.299, 0.587, 0.114));
 				col = max(mix(vec3(lum), col, 1.25), 0.0);   // extrapolated mix can go negative
 

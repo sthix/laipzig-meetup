@@ -33,19 +33,20 @@ import SectionHead from './SectionHead.astro';
 	.section {
 		position: relative;
 		z-index: 2;
-		background: var(--color-ink);
+		background: var(--color-screen);
 		padding-block: var(--section-gap);
 	}
 
-	/* Emphasis by misregistration: two plates a hair out of alignment, the way
-	   a press drifts. Held tighter now that the stems are 400 and not 760 —
-	   at this weight a wide offset reads as a mistake rather than a print. */
+	/* Emphasis is a selection — the same gesture as the wordmark, and the same
+	   two colours a real text selection uses on this page. */
 	.head em {
 		font-style: normal;
-		color: var(--color-paper);
-		text-shadow:
-			0.03em -0.019em 0 var(--color-cyan),
-			-0.026em 0.019em 0 var(--color-magenta);
+		background-image: linear-gradient(var(--color-added), var(--color-added));
+		background-repeat: no-repeat;
+		background-size: 100% var(--select-band);
+		background-position: 0 var(--select-top);
+		color: var(--color-screen);
+		padding-inline: 0.05em;
 	}
 
 	.body {

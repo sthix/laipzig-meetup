@@ -62,11 +62,11 @@ import { NEXT } from '../data/meetup';
 		pointer-events: none;
 		background: linear-gradient(
 			to bottom,
-			rgba(8, 6, 15, 0.72) 0%,
-			rgba(8, 6, 15, 0.3) 20%,
-			rgba(8, 6, 15, 0.24) 46%,
-			rgba(8, 6, 15, 0.74) 62%,
-			rgba(8, 6, 15, 0.86) 100%
+			rgba(11, 11, 11, 0.72) 0%,
+			rgba(11, 11, 11, 0.3) 20%,
+			rgba(11, 11, 11, 0.24) 46%,
+			rgba(11, 11, 11, 0.74) 62%,
+			rgba(11, 11, 11, 0.86) 100%
 		);
 	}
 
@@ -79,7 +79,7 @@ import { NEXT } from '../data/meetup';
 		display: flex;
 		align-items: center;
 		gap: 0.85rem;
-		color: var(--color-paper-2);
+		color: var(--color-fg-2);
 		margin: 0 0 clamp(1.25rem, 4vh, 2.5rem);
 		opacity: 0;
 		animation: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.05s forwards;
@@ -111,27 +111,40 @@ import { NEXT } from '../data/meetup';
 		margin: 0;
 		white-space: nowrap;
 		font-variation-settings: 'wdth' 142, 'wght' 400;
-		animation: register 1.5s cubic-bezier(0.19, 1, 0.22, 1) 0.15s backwards;
+		animation: render 1.5s cubic-bezier(0.19, 1, 0.22, 1) 0.15s backwards;
 	}
 
-	/* AI is not printed. It is a hole in the sheet, and the machine is behind it. */
+	/* AI is selected, not outlined. The block is painted as a background so
+	   it can be wiped in from the left like a cursor dragging over the word;
+	   the static state is the full block, so with animation suppressed the
+	   selection is simply already there. */
 	.ai {
-		color: transparent;
-		-webkit-text-stroke: 0.011em rgba(239, 233, 220, 0.72);
-		paint-order: stroke fill;
+		color: var(--color-screen);
+		background-image: linear-gradient(var(--color-added), var(--color-added));
+		background-repeat: no-repeat;
+		background-size: 100% var(--select-band);
+		background-position: 0 var(--select-top);
+		padding-inline: 0.03em;
+		animation: select 0.62s steps(14, end) 1.02s backwards;
 	}
 
-	/* The press coming into register: three plates drifting into alignment,
-	   the word widening out as it lands. */
-	@keyframes register {
+	@keyframes select {
+		from {
+			background-size: 0% var(--select-band);
+		}
+		to {
+			background-size: 100% var(--select-band);
+		}
+	}
+
+	/* The word coming up on the screen: narrow and unresolved, widening as it
+	   settles, with the phosphor glow decaying off it. */
+	@keyframes render {
 		0% {
 			font-variation-settings: 'wdth' 88, 'wght' 400;
 			opacity: 0;
 			filter: blur(6px);
-			text-shadow:
-				0.11em -0.06em 0 var(--color-cyan),
-				-0.09em 0.07em 0 var(--color-magenta),
-				0.04em 0.1em 0 var(--color-yellow);
+			text-shadow: 0 0 0.34em rgba(75, 217, 122, 0.85);
 		}
 		38% {
 			opacity: 1;
@@ -141,10 +154,7 @@ import { NEXT } from '../data/meetup';
 			font-variation-settings: 'wdth' 142, 'wght' 400;
 			opacity: 1;
 			filter: blur(0);
-			text-shadow:
-				0 0 0 rgba(0, 194, 232, 0),
-				0 0 0 rgba(236, 0, 140, 0),
-				0 0 0 rgba(255, 212, 71, 0);
+			text-shadow: 0 0 0 rgba(75, 217, 122, 0);
 		}
 	}
 
@@ -168,7 +178,7 @@ import { NEXT } from '../data/meetup';
 
 	.lede {
 		margin-top: var(--space-4);
-		color: var(--color-paper);
+		color: var(--color-fg);
 		opacity: 0;
 		animation: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.35s forwards;
 	}
@@ -206,13 +216,13 @@ import { NEXT } from '../data/meetup';
 		height: 2.5rem;
 		background: linear-gradient(
 			to bottom,
-			rgba(239, 233, 220, 0.5),
-			rgba(239, 233, 220, 0)
+			rgba(230, 230, 230, 0.5),
+			rgba(230, 230, 230, 0)
 		);
 	}
 
 	.scroll-cue:hover .micro {
-		color: var(--color-cyan);
+		color: var(--color-added);
 	}
 
 	@keyframes fade-up {
@@ -262,7 +272,8 @@ import { NEXT } from '../data/meetup';
 		.hero-label,
 		.lede,
 		.actions,
-		.scroll-cue {
+		.scroll-cue,
+		.ai {
 			opacity: 1;
 			animation: none;
 		}

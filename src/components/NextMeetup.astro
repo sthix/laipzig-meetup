@@ -5,7 +5,7 @@ import { NEXT, LINKS } from '../data/meetup';
 <section class="section" id="next">
 	<div class="shell">
 		<div class="duo rise">
-			{/* Cut through, same as the AI in the wordmark. Two windows, one page. */}
+			{/* Drawn but not filled — the figure the page is counting down to. */}
 			<time class="date" datetime={NEXT.iso}>
 				<span class="day">{NEXT.day}</span>
 				<span class="month">{NEXT.month}</span>
@@ -51,13 +51,13 @@ import { NEXT, LINKS } from '../data/meetup';
 		z-index: -1;
 		pointer-events: none;
 		background:
-			linear-gradient(to bottom, var(--color-ink), rgba(8, 6, 15, 0) 22%),
-			linear-gradient(to top, var(--color-ink), rgba(8, 6, 15, 0) 22%),
+			linear-gradient(to bottom, var(--color-screen), rgba(11, 11, 11, 0) 22%),
+			linear-gradient(to top, var(--color-screen), rgba(11, 11, 11, 0) 22%),
 			radial-gradient(
 				90% 70% at 50% 50%,
-				rgba(8, 6, 15, 0.78) 0%,
-				rgba(8, 6, 15, 0.45) 55%,
-				rgba(8, 6, 15, 0.1) 100%
+				rgba(11, 11, 11, 0.78) 0%,
+				rgba(11, 11, 11, 0.45) 55%,
+				rgba(11, 11, 11, 0.1) 100%
 			);
 	}
 
@@ -80,7 +80,7 @@ import { NEXT, LINKS } from '../data/meetup';
 		line-height: 0.8;
 		letter-spacing: -0.05em;
 		color: transparent;
-		-webkit-text-stroke: 0.012em rgba(239, 233, 220, 0.7);
+		-webkit-text-stroke: 0.012em rgba(230, 230, 230, 0.7);
 		paint-order: stroke fill;
 	}
 
@@ -110,7 +110,7 @@ import { NEXT, LINKS } from '../data/meetup';
 		gap: var(--space-3);
 	}
 
-	/* The one place magenta is allowed to speak: a live marker, nothing else. */
+	/* A status marker, so it reads as healthy rather than as an alert. */
 	.live {
 		display: inline-flex;
 		align-items: center;
@@ -120,13 +120,13 @@ import { NEXT, LINKS } from '../data/meetup';
 		font-weight: var(--weight-label);
 		letter-spacing: var(--tracking-label);
 		text-transform: uppercase;
-		color: var(--color-magenta);
+		color: var(--color-added);
 	}
 
 	.live i {
 		width: 6px;
 		height: 6px;
-		background: var(--color-magenta);
+		background: var(--color-added);
 		border-radius: 50%;
 		animation: pulse 2.4s ease-in-out infinite;
 	}
@@ -135,21 +135,21 @@ import { NEXT, LINKS } from '../data/meetup';
 		0%,
 		100% {
 			opacity: 1;
-			box-shadow: 0 0 0 0 rgba(236, 0, 140, 0.5);
+			box-shadow: 0 0 0 0 rgba(75, 217, 122, 0.5);
 		}
 		50% {
 			opacity: 0.65;
-			box-shadow: 0 0 0 6px rgba(236, 0, 140, 0);
+			box-shadow: 0 0 0 6px rgba(75, 217, 122, 0);
 		}
 	}
 
 	.meta {
 		margin: 0;
-		color: var(--color-paper-2);
+		color: var(--color-fg-2);
 	}
 
 	.lede {
-		color: var(--color-paper-2);
+		color: var(--color-fg-2);
 	}
 
 	.say > .btn {

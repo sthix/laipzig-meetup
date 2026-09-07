@@ -1,28 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-	/* Ink — the ground. Iron-gall black, pulled slightly violet.
-	   The reference calls for a pure #000 void. Ours is the void with ink
-	   still in it: the one substitution the rest of the palette turns on. */
-	--color-ink: #08060f;
-	--color-ink-2: #100c1c;
-	--color-ink-3: #1a1329;
+	/* Screen — the ground. Near-black and neutral: a terminal with nothing
+	   printed on it yet. */
+	--color-screen: #0b0b0b;
+	--color-screen-2: #141414;
+	--color-screen-3: #1e1e1e;
 
-	/* Paper — warm rag stock, the only "white" on the page. */
-	--color-paper: #efe9dc;
-	--color-paper-2: #b3aabf;
-	/* Nudged up from #7a7189: at 18px the reference's tertiary body colour has
-	   to clear 4.5:1 on the ink, and the old value sat at 4.36. */
-	--color-paper-3: #7f768e;
+	/* Foreground — what the screen is showing. */
+	--color-fg: #e6e6e6;
+	--color-fg-2: #a8a8a8;
+	--color-fg-3: #858585;
 
-	/* The three plates. Process inks, not neon.
-	   The reference runs one saturated accent; we run three, but under its
-	   discipline — cyan carries every filled action and never more than one
-	   per view, yellow marks every section label, magenta is held back for
-	   attention punctuation alone. */
-	--color-cyan: #00c2e8;
-	--color-magenta: #ec008c;
-	--color-yellow: #ffd447;
+	/* The diff gutter. Three colours with jobs rather than three decorations:
+	   added carries every action and the caret, changed marks every section
+	   label, removed is held back for attention alone. */
+	--color-added: #4bd97a;
+	--color-changed: #e0a53c;
+	--color-removed: #f0614d;
 
 	--font-display: "Anybody", "Arial Black", system-ui, sans-serif;
 	--font-body: "Archivo", system-ui, -apple-system, sans-serif;
@@ -65,6 +60,13 @@
 	--space-16: 6rem;
 	--space-20: 7.5rem;
 
+	/* The selection band hugs the capitals rather than filling the em box.
+	   Anybody puts 12% of the box above the caps and 23% below the baseline,
+	   so a full-box highlight is a third empty — invisible at 14px, a slab at
+	   250px. Measured from the font: caps run 0.66em, starting 0.12em down. */
+	--select-band: 0.79em;
+	--select-top: 0.06em;
+
 	--section-gap: clamp(3.75rem, 10vw, 7.5rem);
 	--page-max: 80rem;
 	--radius: 1.5rem;
@@ -83,8 +85,8 @@
 
 	body {
 		margin: 0;
-		background: var(--color-ink);
-		color: var(--color-paper);
+		background: var(--color-screen);
+		color: var(--color-fg);
 		font-family: var(--font-body);
 		font-size: var(--text-body);
 		font-weight: var(--weight-body);
@@ -94,13 +96,15 @@
 		overflow-x: hidden;
 	}
 
+	/* The page's emphasis mechanic is a selection, so a real selection uses
+	   the same two colours. */
 	::selection {
-		background: var(--color-magenta);
-		color: var(--color-paper);
+		background: var(--color-added);
+		color: var(--color-screen);
 	}
 
 	:focus-visible {
-		outline: 2px solid var(--color-cyan);
+		outline: 2px solid var(--color-added);
 		outline-offset: 3px;
 		border-radius: 2px;
 	}
@@ -111,7 +115,7 @@
 }
 
 @layer components {
-	/* Microtype: the printer's marginalia. Always tiny, always tracked out. */
+	/* Microtype: the status line. Always tiny, always tracked out. */
 	.micro {
 		font-family: var(--font-mono);
 		font-size: 0.625rem;
@@ -119,11 +123,11 @@
 		letter-spacing: 0.24em;
 		text-transform: uppercase;
 		line-height: 1.4;
-		color: var(--color-paper-3);
+		color: var(--color-fg-3);
 	}
 
-	/* The section label: small, uppercase, and the only place yellow appears
-	   as type. It sits above body copy the way a slug sits above a column. */
+	/* The section label: small, uppercase, and the only place the changed
+	   colour appears as type. */
 	.label {
 		font-family: var(--font-mono);
 		font-size: var(--text-caption);
@@ -131,7 +135,7 @@
 		letter-spacing: var(--tracking-label);
 		text-transform: uppercase;
 		line-height: 1.2;
-		color: var(--color-yellow);
+		color: var(--color-changed);
 		margin: 0;
 	}
 
@@ -155,20 +159,20 @@
 		text-wrap: balance;
 	}
 
-	/* Body copy runs light. The reference sets 200; at this size, on ink
-	   rather than pure black, Archivo 200 goes anemic — 300 keeps the air
-	   without dropping the stems out from under the reader. */
+	/* Body copy runs light. The reference sets 200; Archivo at 200 goes
+	   anemic against this ground — 300 keeps the air without dropping the
+	   stems out from under the reader. */
 	.lede {
 		margin: 0;
 		font-size: var(--text-body);
 		font-weight: var(--weight-body);
 		line-height: 1.5;
-		color: var(--color-paper-2);
+		color: var(--color-fg-2);
 		text-wrap: pretty;
 	}
 
-	/* One button, two forms. The filled pill is cyan and appears once per
-	   view; everything else is a ghost. */
+	/* One button, two forms. The filled pill takes the added colour and shows
+	   once per view; everything else is a ghost. */
 	.btn {
 		display: inline-flex;
 		align-items: center;
@@ -195,23 +199,23 @@
 	}
 
 	.btn-primary {
-		background: var(--color-cyan);
-		border-color: var(--color-cyan);
-		color: var(--color-ink);
+		background: var(--color-added);
+		border-color: var(--color-added);
+		color: var(--color-screen);
 	}
 
 	.btn-primary:hover {
-		background: var(--color-paper);
-		border-color: var(--color-paper);
+		background: var(--color-fg);
+		border-color: var(--color-fg);
 	}
 
 	.btn-ghost {
-		color: var(--color-paper);
+		color: var(--color-fg);
 		padding-inline: var(--space-2);
 	}
 
 	.btn-ghost:hover {
-		color: var(--color-cyan);
+		color: var(--color-added);
 	}
 
 	.btn-date {

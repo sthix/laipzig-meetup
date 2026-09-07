@@ -16,10 +16,10 @@ const LINKS = [
 <nav class="nav" aria-label="Primary">
 	<div class="shell nav-inner">
 		<a class="brand" href="#top">
-			{/* A printer's registration target — the mark used to align the plates. */}
-			<svg class="reg" viewBox="0 0 24 24" aria-hidden="true">
-				<circle cx="12" cy="12" r="6.5"></circle>
-				<path d="M12 0v24M0 12h24"></path>
+			{/* A shell prompt and its block cursor. */}
+			<svg class="caret" viewBox="0 0 24 24" aria-hidden="true">
+				<path d="M3 5 L10 12 L3 19"></path>
+				<rect x="13" y="4" width="8" height="16"></rect>
 			</svg>
 			<span class="wordmark">l<span class="ai">AI</span>pzig</span>
 		</a>
@@ -67,13 +67,21 @@ const LINKS = [
 		text-decoration: none;
 	}
 
-	.reg {
+	.caret {
 		flex: none;
-		width: 15px;
-		height: 15px;
-		stroke: var(--color-cyan);
-		stroke-width: 1.1;
+		width: 16px;
+		height: 16px;
+	}
+
+	.caret path {
 		fill: none;
+		stroke: var(--color-fg-3);
+		stroke-width: 1.6;
+	}
+
+	.caret rect {
+		fill: var(--color-added);
+		stroke: none;
 	}
 
 	/* The wordmark sits at nav scale but keeps the display voice, so the
@@ -84,13 +92,17 @@ const LINKS = [
 		font-size: var(--text-nav);
 		font-weight: 400;
 		letter-spacing: -0.01em;
-		color: var(--color-paper);
+		color: var(--color-fg);
 	}
 
+	/* AI is a selection, not an outline — the same gesture as the hero. */
 	.ai {
-		color: transparent;
-		-webkit-text-stroke: 0.04em rgba(239, 233, 220, 0.75);
-		paint-order: stroke fill;
+		background-image: linear-gradient(var(--color-added), var(--color-added));
+		background-repeat: no-repeat;
+		background-size: 100% var(--select-band);
+		background-position: 0 var(--select-top);
+		color: var(--color-screen);
+		padding-inline: 0.06em;
 	}
 
 	.right {
@@ -116,12 +128,12 @@ const LINKS = [
 		letter-spacing: var(--tracking-label);
 		text-transform: uppercase;
 		text-decoration: none;
-		color: var(--color-paper-3);
+		color: var(--color-fg-3);
 		transition: color 0.2s ease;
 	}
 
 	.links a:hover {
-		color: var(--color-paper);
+		color: var(--color-fg);
 	}
 
 	@media (max-width: 720px) {

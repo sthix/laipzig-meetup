@@ -9,15 +9,15 @@ const { label, note, id } = Astro.props;
 ---
 
 <div class="sec-head rise" id={id}>
-	{/* Registration target and ink-density bars — the two marks a press puts
-	    in the trim margin. Held as a tight cluster rather than stretched on a
-	    rule, because nothing on this page draws a line across the column. */}
+	{/* The prompt, and a diff gutter beside it. A tight cluster rather than
+	    something stretched on a rule, because nothing on this page draws a
+	    line across the column. */}
 	<span class="marks" aria-hidden="true">
-		<svg class="reg" viewBox="0 0 24 24">
-			<circle cx="12" cy="12" r="6.5"></circle>
-			<path d="M12 0v24M0 12h24"></path>
+		<svg class="caret" viewBox="0 0 24 24">
+			<path d="M3 5 L10 12 L3 19"></path>
+			<rect x="13" y="4" width="8" height="16"></rect>
 		</svg>
-		<span class="bars"><i></i><i></i><i></i></span>
+		<span class="gutter"><i></i><i></i><i></i></span>
 	</span>
 
 	<h2 class="label">{label}</h2>
@@ -39,32 +39,42 @@ const { label, note, id } = Astro.props;
 		flex: none;
 	}
 
-	.reg {
-		width: 14px;
-		height: 14px;
-		stroke: var(--color-cyan);
-		stroke-width: 1.1;
-		fill: none;
+	.caret {
+		width: 15px;
+		height: 15px;
 	}
 
-	.bars {
+	.caret path {
+		fill: none;
+		stroke: var(--color-fg-3);
+		stroke-width: 1.6;
+	}
+
+	.caret rect {
+		fill: var(--color-added);
+		stroke: none;
+	}
+
+	/* Added, removed, unchanged — the three marks a gutter can carry. */
+	.gutter {
 		display: flex;
+		flex-direction: column;
 		gap: 2px;
 	}
 
-	.bars i {
+	.gutter i {
 		width: 10px;
-		height: 4px;
+		height: 3px;
 	}
 
-	.bars i:nth-child(1) {
-		background: var(--color-cyan);
+	.gutter i:nth-child(1) {
+		background: var(--color-added);
 	}
-	.bars i:nth-child(2) {
-		background: var(--color-magenta);
+	.gutter i:nth-child(2) {
+		background: var(--color-removed);
 	}
-	.bars i:nth-child(3) {
-		background: var(--color-yellow);
+	.gutter i:nth-child(3) {
+		background: var(--color-fg-3);
 	}
 
 	.label {
@@ -77,7 +87,7 @@ const { label, note, id } = Astro.props;
 		font-weight: 400;
 		letter-spacing: 0.06em;
 		line-height: 1.2;
-		color: var(--color-paper-3);
+		color: var(--color-fg-3);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
