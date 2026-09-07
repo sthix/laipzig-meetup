@@ -1,0 +1,132 @@
+---
+/**
+ * A transparent bar sitting directly on the lattice — no backdrop, no blur,
+ * no bottom rule. Mark and wordmark left, ghost links right, and exactly one
+ * filled pill anchoring the edge.
+ */
+import { NEXT } from '../data/meetup';
+
+const LINKS = [
+	{ href: '#why', label: 'Why' },
+	{ href: '#topics', label: 'Topics' },
+	{ href: '#evening', label: 'Evening' },
+];
+---
+
+<nav class="nav" aria-label="Primary">
+	<div class="shell nav-inner">
+		<a class="brand" href="#top">
+			{/* A printer's registration target — the mark used to align the plates. */}
+			<svg class="reg" viewBox="0 0 24 24" aria-hidden="true">
+				<circle cx="12" cy="12" r="6.5"></circle>
+				<path d="M12 0v24M0 12h24"></path>
+			</svg>
+			<span class="wordmark">l<span class="ai">AI</span>pzig</span>
+		</a>
+
+		<div class="right">
+			<ul class="links">
+				{
+					LINKS.map((link) => (
+						<li>
+							<a href={link.href}>{link.label}</a>
+						</li>
+					))
+				}
+			</ul>
+
+			<a class="btn btn-primary" href="#next">
+				Come along
+				<span class="btn-date">{NEXT.short}</span>
+			</a>
+		</div>
+	</div>
+</nav>
+
+<style>
+	.nav {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 10;
+		padding-block: var(--space-4);
+	}
+
+	.nav-inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-4);
+	}
+
+	.brand {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-2);
+		text-decoration: none;
+	}
+
+	.reg {
+		flex: none;
+		width: 15px;
+		height: 15px;
+		stroke: var(--color-cyan);
+		stroke-width: 1.1;
+		fill: none;
+	}
+
+	/* The wordmark sits at nav scale but keeps the display voice, so the
+	   header reads as a smaller printing of the hero rather than a logo. */
+	.wordmark {
+		font-family: var(--font-display);
+		font-variation-settings: 'wdth' 128, 'wght' 400;
+		font-size: var(--text-nav);
+		font-weight: 400;
+		letter-spacing: -0.01em;
+		color: var(--color-paper);
+	}
+
+	.ai {
+		color: transparent;
+		-webkit-text-stroke: 0.04em rgba(239, 233, 220, 0.75);
+		paint-order: stroke fill;
+	}
+
+	.right {
+		display: flex;
+		align-items: center;
+		gap: clamp(var(--space-3), 3vw, var(--space-6));
+	}
+
+	.links {
+		display: flex;
+		align-items: center;
+		gap: clamp(var(--space-3), 2.5vw, var(--space-5));
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	/* Ghost links: no container at all. Hierarchy is tracking and colour. */
+	.links a {
+		font-family: var(--font-mono);
+		font-size: 0.6875rem;
+		font-weight: 500;
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+		text-decoration: none;
+		color: var(--color-paper-3);
+		transition: color 0.2s ease;
+	}
+
+	.links a:hover {
+		color: var(--color-paper);
+	}
+
+	@media (max-width: 720px) {
+		.links {
+			display: none;
+		}
+	}
+</style>

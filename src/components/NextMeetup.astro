@@ -4,41 +4,44 @@ import { NEXT, LINKS } from '../data/meetup';
 
 <section class="section" id="next">
 	<div class="shell">
-		<div class="panel rise">
-			<div class="top">
-				<h2 class="micro">Next meetup</h2>
-				<span class="rule" aria-hidden="true"></span>
-				<span class="micro live"><i aria-hidden="true"></i>Open to all</span>
-			</div>
-
+		<div class="duo rise">
+			{/* Cut through, same as the AI in the wordmark. Two windows, one page. */}
 			<time class="date" datetime={NEXT.iso}>
 				<span class="day">{NEXT.day}</span>
-				<span class="rest">
-					<span class="month">{NEXT.month}</span>
-					<span class="micro meta">
-						{NEXT.weekday} &middot; {NEXT.time} &middot; {NEXT.city} &middot; {NEXT.year}
-					</span>
-				</span>
+				<span class="month">{NEXT.month}</span>
 			</time>
 
-			<div class="bottom">
-				<p class="fine">
+			<div class="say">
+				<div class="top">
+					<p class="label">Next meetup</p>
+					<span class="live"><i aria-hidden="true"></i>Open to all</span>
+				</div>
+
+				<p class="meta micro">
+					{NEXT.weekday} &middot; {NEXT.time} &middot; {NEXT.city} &middot; {
+						NEXT.year
+					}
+				</p>
+
+				<p class="lede">
 					Free, no ticket, no registration desk. The venue is announced with the
 					date &mdash; put your name down and it lands in your inbox two weeks
 					ahead.
 				</p>
-				<a class="btn" href={LINKS.announce}>Get the announcement</a>
+
+				<a class="btn btn-primary" href={LINKS.announce}>Get the announcement</a>
 			</div>
 		</div>
 	</div>
 </section>
 
 <style>
-	/* Transparent by design: this is the second window onto the lattice. */
+	/* Transparent by design: this is the second window onto the lattice. The
+	   panel that used to frame it is gone — the scrim alone holds the type. */
 	.section {
 		position: relative;
 		z-index: 2;
-		padding-block: clamp(5rem, 14vw, 10rem);
+		padding-block: var(--section-gap);
 	}
 
 	.section::before {
@@ -58,35 +61,66 @@ import { NEXT, LINKS } from '../data/meetup';
 			);
 	}
 
-	.panel {
-		border: 1px solid rgba(239, 233, 220, 0.22);
-		padding: clamp(1.5rem, 3.5vw, 2.75rem);
+	.duo {
+		align-items: center;
+	}
+
+	/* ---- The date ------------------------------------------------------ */
+
+	.date {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.day {
+		font-family: var(--font-display);
+		font-variation-settings: 'wdth' 138, 'wght' 400;
+		font-size: var(--text-display);
+		font-weight: 400;
+		line-height: 0.8;
+		letter-spacing: -0.05em;
+		color: transparent;
+		-webkit-text-stroke: 0.012em rgba(239, 233, 220, 0.7);
+		paint-order: stroke fill;
+	}
+
+	.month {
+		font-family: var(--font-display);
+		font-variation-settings: 'wdth' 108, 'wght' 400;
+		font-size: var(--text-heading-sm);
+		font-weight: 400;
+		line-height: 1;
+		letter-spacing: var(--tracking-display);
+		margin-top: var(--space-2);
+	}
+
+	/* ---- The right column ---------------------------------------------- */
+
+	.say {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-3);
+		max-width: 32rem;
 	}
 
 	.top {
 		display: flex;
 		align-items: center;
-		gap: 1rem;
+		gap: var(--space-3);
 	}
 
-	.top .micro {
-		margin: 0;
-		font-size: 0.625rem;
-		color: var(--color-paper);
-		white-space: nowrap;
-	}
-
-	.rule {
-		flex: 1 1 auto;
-		height: 1px;
-		background: rgba(239, 233, 220, 0.18);
-	}
-
+	/* The one place magenta is allowed to speak: a live marker, nothing else. */
 	.live {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.55rem;
-		color: var(--color-magenta) !important;
+		gap: 0.5rem;
+		font-family: var(--font-mono);
+		font-size: var(--text-caption);
+		font-weight: var(--weight-label);
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+		color: var(--color-magenta);
 	}
 
 	.live i {
@@ -109,105 +143,21 @@ import { NEXT, LINKS } from '../data/meetup';
 		}
 	}
 
-	/* ---- The date ------------------------------------------------------ */
-
-	.date {
-		display: flex;
-		align-items: flex-end;
-		gap: clamp(1rem, 3vw, 2.25rem);
-		padding-block: clamp(2rem, 5vw, 3.5rem) clamp(1.75rem, 4vw, 3rem);
-	}
-
-	/* Cut through, same as the AI in the wordmark. Two windows, one page. */
-	.day {
-		font-family: var(--font-display);
-		font-variation-settings: 'wdth' 138, 'wght' 800;
-		font-size: clamp(5rem, 19vw, 15rem);
-		line-height: 0.74;
-		letter-spacing: -0.05em;
-		color: transparent;
-		-webkit-text-stroke: 0.013em rgba(239, 233, 220, 0.7);
-		paint-order: stroke fill;
-	}
-
-	.rest {
-		display: flex;
-		flex-direction: column;
-		gap: 0.85rem;
-		padding-bottom: 0.35rem;
-	}
-
-	.month {
-		font-family: var(--font-display);
-		font-variation-settings: 'wdth' 108, 'wght' 620;
-		font-size: clamp(1.5rem, 4vw, 3rem);
-		line-height: 0.9;
-		letter-spacing: -0.02em;
-	}
-
 	.meta {
-		color: var(--color-paper-2);
-	}
-
-	/* ---- Bottom -------------------------------------------------------- */
-
-	.bottom {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1.5rem;
-		border-top: 1px solid rgba(239, 233, 220, 0.18);
-		padding-top: clamp(1.25rem, 3vw, 1.75rem);
-	}
-
-	.fine {
 		margin: 0;
-		max-width: 52ch;
-		font-size: 0.9375rem;
-		line-height: 1.6;
 		color: var(--color-paper-2);
-		text-wrap: pretty;
 	}
 
-	.btn {
-		flex: none;
-		display: inline-flex;
-		align-items: center;
-		padding: 0.85rem 1.35rem;
-		background: var(--color-paper);
-		color: var(--color-ink);
-		border: 1px solid var(--color-paper);
-		font-family: var(--font-mono);
-		font-size: 0.6875rem;
-		font-weight: 500;
-		letter-spacing: 0.16em;
-		text-transform: uppercase;
-		text-decoration: none;
-		transition:
-			background-color 0.25s ease,
-			border-color 0.25s ease,
-			transform 0.25s ease;
+	.lede {
+		color: var(--color-paper-2);
 	}
 
-	.btn:hover {
-		background: var(--color-cyan);
-		border-color: var(--color-cyan);
-		transform: translateY(-2px);
+	.say > .btn {
+		margin-top: var(--space-1);
 	}
 
 	@media (max-width: 640px) {
-		.date {
-			flex-direction: column;
-			align-items: flex-start;
-			gap: 0.9rem;
-		}
-
-		.day {
-			font-variation-settings: 'wdth' 118, 'wght' 800;
-		}
-
-		.btn {
+		.say > .btn {
 			width: 100%;
 			justify-content: center;
 		}

@@ -13,10 +13,7 @@ import { TOPICS } from '../data/meetup';
 		<ul class="voices">
 			{
 				TOPICS.map((topic, i) => (
-					<li
-						class="voice rise"
-						style={`--i: ${i}; --rise-delay: ${i * 70}ms`}
-					>
+					<li class="voice rise" style={`--i: ${i}; --rise-delay: ${i * 70}ms`}>
 						<span class="entry" aria-hidden="true" />
 						<h3 class="name">{topic.name}</h3>
 						<p class="note">{topic.note}</p>
@@ -32,30 +29,30 @@ import { TOPICS } from '../data/meetup';
 		position: relative;
 		z-index: 2;
 		background: var(--color-ink);
-		padding-block: 0 clamp(4.5rem, 12vw, 9rem);
+		padding-block: 0 var(--section-gap);
 	}
 
 	.voices {
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		border-top: 1px solid rgba(239, 233, 220, 0.12);
 	}
 
-	/* Each voice enters later and further in — a stretto, read top to bottom. */
+	/* Each voice enters later and further in — a stretto, read top to bottom.
+	   The rules that used to separate them are gone: whitespace and the
+	   staggered indent do the separating now. */
 	.voice {
 		position: relative;
 		display: grid;
 		grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
-		gap: clamp(1rem, 4vw, 3rem);
+		gap: clamp(var(--space-2), 4vw, var(--space-6));
 		align-items: baseline;
-		padding: clamp(1.1rem, 2.4vw, 1.6rem) 0;
+		padding: clamp(var(--space-3), 2.6vw, var(--space-5)) 0;
 		padding-left: calc(var(--i) * 2.7%);
-		border-bottom: 1px solid rgba(239, 233, 220, 0.12);
 		transition: padding-left 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
-	/* Tick marking where this voice comes in. */
+	/* Tick marking where this voice comes in — the only vertical mark left. */
 	.entry {
 		position: absolute;
 		left: calc(var(--i) * 2.7%);
@@ -81,12 +78,14 @@ import { TOPICS } from '../data/meetup';
 		background: var(--color-yellow);
 	}
 
+	/* 400 throughout. Hover opens the width axis, never the weight axis. */
 	.name {
 		font-family: var(--font-display);
-		font-variation-settings: 'wdth' 100, 'wght' 620;
-		font-size: clamp(1.35rem, 3.2vw, 2.35rem);
-		line-height: 1.05;
-		letter-spacing: -0.015em;
+		font-variation-settings: 'wdth' 100, 'wght' 400;
+		font-size: var(--text-heading-sm);
+		font-weight: 400;
+		line-height: 1.02;
+		letter-spacing: var(--tracking-display);
 		margin: 0;
 		transition: font-variation-settings 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 	}
@@ -94,9 +93,10 @@ import { TOPICS } from '../data/meetup';
 	.note {
 		margin: 0;
 		color: var(--color-paper-3);
-		font-size: 0.9375rem;
-		line-height: 1.6;
-		max-width: 44ch;
+		font-size: var(--text-body);
+		font-weight: var(--weight-body);
+		line-height: 1.5;
+		max-width: 40ch;
 		text-wrap: pretty;
 		transition: color 0.3s ease;
 	}
@@ -111,7 +111,7 @@ import { TOPICS } from '../data/meetup';
 	}
 
 	.voice:hover .name {
-		font-variation-settings: 'wdth' 126, 'wght' 700;
+		font-variation-settings: 'wdth' 128, 'wght' 400;
 	}
 
 	.voice:hover .note {
@@ -121,7 +121,7 @@ import { TOPICS } from '../data/meetup';
 	@media (max-width: 780px) {
 		.voice {
 			grid-template-columns: 1fr;
-			gap: 0.4rem;
+			gap: var(--space-1);
 			padding-left: calc(var(--i) * 2.4%);
 		}
 
@@ -131,10 +131,6 @@ import { TOPICS } from '../data/meetup';
 
 		.entry {
 			left: calc(var(--i) * 2.4%);
-		}
-
-		.name {
-			font-variation-settings: 'wdth' 100, 'wght' 640;
 		}
 	}
 </style>

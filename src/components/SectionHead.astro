@@ -9,68 +9,52 @@ const { label, note, id } = Astro.props;
 ---
 
 <div class="sec-head rise" id={id}>
-	{/* A printer's registration target — the mark used to align the plates. */}
-	<svg class="reg" viewBox="0 0 24 24" aria-hidden="true">
-		<circle cx="12" cy="12" r="6.5" />
-		<path d="M12 0v24M0 12h24" />
-	</svg>
-	<h2 class="micro label">{label}</h2>
-	{note && <span class="micro note">{note}</span>}
-	<span class="rule" aria-hidden="true"></span>
-	<span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
+	{/* Registration target and ink-density bars — the two marks a press puts
+	    in the trim margin. Held as a tight cluster rather than stretched on a
+	    rule, because nothing on this page draws a line across the column. */}
+	<span class="marks" aria-hidden="true">
+		<svg class="reg" viewBox="0 0 24 24">
+			<circle cx="12" cy="12" r="6.5"></circle>
+			<path d="M12 0v24M0 12h24"></path>
+		</svg>
+		<span class="bars"><i></i><i></i><i></i></span>
+	</span>
+
+	<h2 class="label">{label}</h2>
+	{note && <span class="note">{note}</span>}
 </div>
 
 <style>
 	.sec-head {
 		display: flex;
 		align-items: center;
-		gap: 0.85rem;
-		padding-bottom: clamp(2rem, 5vw, 3.25rem);
+		gap: var(--space-2);
+		padding-bottom: clamp(var(--space-5), 5vw, var(--space-10));
+	}
+
+	.marks {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-1);
+		flex: none;
 	}
 
 	.reg {
-		flex: none;
-		width: 15px;
-		height: 15px;
+		width: 14px;
+		height: 14px;
 		stroke: var(--color-cyan);
 		stroke-width: 1.1;
 		fill: none;
-		opacity: 0.85;
 	}
 
-	.label {
-		margin: 0;
-		font-size: 0.625rem;
-		color: var(--color-paper);
-		white-space: nowrap;
-	}
-
-	.note {
-		color: var(--color-paper-3);
-		letter-spacing: 0.12em;
-		text-transform: none;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-
-	.rule {
-		flex: 1 1 auto;
-		min-width: 1.5rem;
-		height: 1px;
-		background: rgba(239, 233, 220, 0.16);
-	}
-
-	/* The colour bar a press prints in the trim margin to check ink density. */
 	.bars {
-		flex: none;
 		display: flex;
 		gap: 2px;
 	}
 
 	.bars i {
-		width: 14px;
-		height: 5px;
+		width: 10px;
+		height: 4px;
 	}
 
 	.bars i:nth-child(1) {
@@ -81,6 +65,22 @@ const { label, note, id } = Astro.props;
 	}
 	.bars i:nth-child(3) {
 		background: var(--color-yellow);
+	}
+
+	.label {
+		white-space: nowrap;
+	}
+
+	.note {
+		font-family: var(--font-mono);
+		font-size: var(--text-caption);
+		font-weight: 400;
+		letter-spacing: 0.06em;
+		line-height: 1.2;
+		color: var(--color-paper-3);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	@media (max-width: 720px) {

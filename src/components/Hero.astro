@@ -2,7 +2,7 @@
 import { NEXT } from '../data/meetup';
 ---
 
-<header class="hero">
+<header class="hero" id="top">
 	<div class="shell hero-inner">
 		<p class="micro hero-mark">
 			<span>51.3397&deg; N</span>
@@ -16,20 +16,22 @@ import { NEXT } from '../data/meetup';
 			<span>l</span><span class="ai">AI</span><span>pzig</span>
 		</h1>
 
-		<p class="micro hero-sub">AI Meetup &mdash; open to anyone</p>
+		<div class="say">
+			<p class="label hero-label">AI meetup &mdash; open to anyone</p>
 
-		<p class="lede">
-			Agents, harnesses, models, and whatever you dragged in half&#8209;working.
-			No gatekeeping, no required background &mdash; just people who find this
-			stuff interesting.
-		</p>
+			<p class="lede">
+				Agents, harnesses, models, and whatever you dragged in
+				half&#8209;working. No gatekeeping, no required background &mdash; just
+				people who find this stuff interesting.
+			</p>
 
-		<div class="actions">
-			<a class="btn btn-primary" href="#next">
-				Come to the next one
-				<span class="btn-date">{NEXT.short}</span>
-			</a>
-			<a class="btn btn-ghost" href="#topics">See what we talk about</a>
+			<div class="actions">
+				<a class="btn btn-primary" href="#next">
+					Come to the next one
+					<span class="btn-date">{NEXT.short}</span>
+				</a>
+				<a class="btn btn-ghost" href="#topics">See what we talk about</a>
+			</div>
 		</div>
 	</div>
 
@@ -47,7 +49,7 @@ import { NEXT } from '../data/meetup';
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		padding-block: clamp(6rem, 14vh, 9rem) clamp(5rem, 12vh, 7rem);
+		padding-block: clamp(7rem, 16vh, 10rem) clamp(5rem, 12vh, 7rem);
 	}
 
 	/* The scrim is banded, not flat: heavy where the small type sits, nearly
@@ -92,24 +94,30 @@ import { NEXT } from '../data/meetup';
 
 	/* ---- Wordmark ------------------------------------------------------ */
 
-	/* At 'wdth' 142 the word measures 5.07x its font size, and the shell gives
-	   it 90vw (capped at 78rem). Sizing from that makes the wordmark set the
-	   measure of the page: it fills the column exactly, at every width. */
+	/* Weightless by rule: 400 at every display size, the width axis and the
+	   sheer measure carrying the hierarchy instead of a heavy stem. Dropping
+	   from 800 to 400 narrowed the word — at 'wdth' 142 with -0.04em it now
+	   measures 4.467x its font size, against 5.07x before — so the size that
+	   fills the column had to come up with it. The shell gives the word 90vw
+	   (its content capped near 1136px), and 90/4.467 ≈ 20vw is what fills it —
+	   held a hair under that so subpixel rounding never clips the g.
+	   The wordmark still sets the measure of the page at every width. */
 	.wordmark {
 		font-family: var(--font-display);
-		font-size: min(17.4vw, 13.3rem);
-		line-height: 0.82;
-		letter-spacing: -0.035em;
+		font-size: min(19.9vw, 15.75rem);
+		font-weight: 400;
+		line-height: 0.86;
+		letter-spacing: var(--tracking-display);
 		margin: 0;
 		white-space: nowrap;
-		font-variation-settings: 'wdth' 142, 'wght' 800;
+		font-variation-settings: 'wdth' 142, 'wght' 400;
 		animation: register 1.5s cubic-bezier(0.19, 1, 0.22, 1) 0.15s backwards;
 	}
 
 	/* AI is not printed. It is a hole in the sheet, and the machine is behind it. */
 	.ai {
 		color: transparent;
-		-webkit-text-stroke: 0.015em rgba(239, 233, 220, 0.72);
+		-webkit-text-stroke: 0.011em rgba(239, 233, 220, 0.72);
 		paint-order: stroke fill;
 	}
 
@@ -117,7 +125,7 @@ import { NEXT } from '../data/meetup';
 	   the word widening out as it lands. */
 	@keyframes register {
 		0% {
-			font-variation-settings: 'wdth' 88, 'wght' 800;
+			font-variation-settings: 'wdth' 88, 'wght' 400;
 			opacity: 0;
 			filter: blur(6px);
 			text-shadow:
@@ -130,7 +138,7 @@ import { NEXT } from '../data/meetup';
 			filter: blur(0);
 		}
 		100% {
-			font-variation-settings: 'wdth' 142, 'wght' 800;
+			font-variation-settings: 'wdth' 142, 'wght' 400;
 			opacity: 1;
 			filter: blur(0);
 			text-shadow:
@@ -140,20 +148,27 @@ import { NEXT } from '../data/meetup';
 		}
 	}
 
-	.hero-sub {
-		margin: clamp(0.9rem, 2.5vh, 1.6rem) 0 0;
-		color: var(--color-paper-2);
+	/* Everything under the wordmark is one narrow column on the left half —
+	   the right half stays open onto the lattice. */
+	/* The copy column is held to the reference's 480px measure; the actions
+	   sit outside it so the two pills never wrap against each other. */
+	.say {
+		margin-top: clamp(1.5rem, 4vh, 2.5rem);
+	}
+
+	.hero-label,
+	.lede {
+		max-width: 30rem;
+	}
+
+	.hero-label {
 		opacity: 0;
 		animation: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
 	}
 
 	.lede {
-		max-width: 34ch;
-		margin: clamp(1.5rem, 4vh, 2.5rem) 0 0;
-		font-size: clamp(1.05rem, 1.35vw, 1.25rem);
-		line-height: 1.55;
+		margin-top: var(--space-4);
 		color: var(--color-paper);
-		text-wrap: pretty;
 		opacity: 0;
 		animation: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.35s forwards;
 	}
@@ -163,62 +178,11 @@ import { NEXT } from '../data/meetup';
 	.actions {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.75rem;
+		align-items: center;
+		gap: var(--space-2);
 		margin-top: clamp(1.75rem, 4.5vh, 2.75rem);
 		opacity: 0;
 		animation: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
-	}
-
-	.btn {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.75rem;
-		padding: 0.85rem 1.35rem;
-		font-family: var(--font-mono);
-		font-size: 0.6875rem;
-		font-weight: 500;
-		letter-spacing: 0.16em;
-		text-transform: uppercase;
-		text-decoration: none;
-		border: 1px solid;
-		transition:
-			background-color 0.25s ease,
-			color 0.25s ease,
-			border-color 0.25s ease,
-			transform 0.25s ease;
-	}
-
-	.btn:hover {
-		transform: translateY(-2px);
-	}
-
-	.btn-primary {
-		background: var(--color-paper);
-		border-color: var(--color-paper);
-		color: var(--color-ink);
-	}
-
-	.btn-primary:hover {
-		background: var(--color-cyan);
-		border-color: var(--color-cyan);
-		color: var(--color-ink);
-	}
-
-	.btn-date {
-		padding-left: 0.75rem;
-		border-left: 1px solid currentColor;
-		opacity: 0.55;
-		letter-spacing: 0.1em;
-	}
-
-	.btn-ghost {
-		border-color: rgba(239, 233, 220, 0.28);
-		color: var(--color-paper);
-	}
-
-	.btn-ghost:hover {
-		border-color: var(--color-paper);
-		background: rgba(239, 233, 220, 0.06);
 	}
 
 	/* ---- Scroll cue ---------------------------------------------------- */
@@ -275,9 +239,9 @@ import { NEXT } from '../data/meetup';
 	}
 
 	@media (max-width: 640px) {
-		.btn {
+		.actions .btn {
 			flex: 1 1 100%;
-			justify-content: space-between;
+			justify-content: center;
 		}
 
 		.scroll-cue {
@@ -288,7 +252,7 @@ import { NEXT } from '../data/meetup';
 	@media (prefers-reduced-motion: reduce) {
 		.wordmark,
 		.hero-mark,
-		.hero-sub,
+		.hero-label,
 		.lede,
 		.actions,
 		.scroll-cue {

@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-	/* Ink — the ground. Iron-gall black, pulled slightly violet. */
+	/* Ink — the ground. Iron-gall black, pulled slightly violet.
+	   The reference calls for a pure #000 void. Ours is the void with ink
+	   still in it: the one substitution the rest of the palette turns on. */
 	--color-ink: #08060f;
 	--color-ink-2: #100c1c;
 	--color-ink-3: #1a1329;
@@ -9,9 +11,15 @@
 	/* Paper — warm rag stock, the only "white" on the page. */
 	--color-paper: #efe9dc;
 	--color-paper-2: #b3aabf;
-	--color-paper-3: #7a7189;
+	/* Nudged up from #7a7189: at 18px the reference's tertiary body colour has
+	   to clear 4.5:1 on the ink, and the old value sat at 4.36. */
+	--color-paper-3: #7f768e;
 
-	/* The three plates. Process inks, not neon. */
+	/* The three plates. Process inks, not neon.
+	   The reference runs one saturated accent; we run three, but under its
+	   discipline — cyan carries every filled action and never more than one
+	   per view, yellow marks every section label, magenta is held back for
+	   attention punctuation alone. */
 	--color-cyan: #00c2e8;
 	--color-magenta: #ec008c;
 	--color-yellow: #ffd447;
@@ -19,6 +27,48 @@
 	--font-display: "Anybody", "Arial Black", system-ui, sans-serif;
 	--font-body: "Archivo", system-ui, -apple-system, sans-serif;
 	--font-mono: "Martian Mono", ui-monospace, "SF Mono", monospace;
+}
+
+/* Layout tokens sit outside @theme deliberately: --spacing-* declared in there
+   would redefine Tailwind's own scale, and this page is styled in component
+   CSS rather than utilities. */
+:root {
+	/* Type scale — the reference's steps in rem, fluid where they are display
+	   sizes so the 113px top end survives a phone. */
+	--text-caption: 0.75rem; /* 12 */
+	--text-nav: 0.875rem; /* 14 */
+	--text-body: 1.125rem; /* 18 */
+	--text-heading-2xs: 1.5rem; /* 24 */
+	--text-heading-xs: 1.6875rem; /* 27 */
+	--text-subheading: clamp(1.5rem, 3.2vw, 2.25rem); /* → 36 */
+	--text-heading-sm: clamp(1.75rem, 4.2vw, 2.625rem); /* → 42 */
+	--text-heading: clamp(2rem, 5vw, 3rem); /* → 48 */
+	--text-heading-lg: clamp(2.4rem, 6.4vw, 4.875rem); /* → 78 */
+	--text-display: clamp(3.25rem, 11.4vw, 7.0625rem); /* → 113 */
+
+	/* Hierarchy is carried by scale and tracking, never by weight. Every
+	   display size sits at 400; only labels are allowed to go heavy. */
+	--weight-display: 400;
+	--weight-body: 300;
+	--weight-label: 600;
+	--tracking-display: -0.04em;
+	--tracking-label: 0.025em;
+
+	/* 6px base unit. */
+	--space-1: 0.375rem;
+	--space-2: 0.75rem;
+	--space-3: 1.125rem;
+	--space-4: 1.5rem;
+	--space-5: 1.875rem;
+	--space-6: 2.25rem;
+	--space-10: 3.75rem;
+	--space-16: 6rem;
+	--space-20: 7.5rem;
+
+	--section-gap: clamp(3.75rem, 10vw, 7.5rem);
+	--page-max: 80rem;
+	--radius: 1.5rem;
+	--radius-pill: 9999px;
 }
 
 @layer base {
@@ -36,8 +86,9 @@
 		background: var(--color-ink);
 		color: var(--color-paper);
 		font-family: var(--font-body);
-		font-size: 1rem;
-		line-height: 1.6;
+		font-size: var(--text-body);
+		font-weight: var(--weight-body);
+		line-height: 1.5;
 		font-synthesis-weight: none;
 		-webkit-font-smoothing: antialiased;
 		overflow-x: hidden;
@@ -51,7 +102,7 @@
 	:focus-visible {
 		outline: 2px solid var(--color-cyan);
 		outline-offset: 3px;
-		border-radius: 1px;
+		border-radius: 2px;
 	}
 
 	a {
@@ -71,22 +122,126 @@
 		color: var(--color-paper-3);
 	}
 
+	/* The section label: small, uppercase, and the only place yellow appears
+	   as type. It sits above body copy the way a slug sits above a column. */
+	.label {
+		font-family: var(--font-mono);
+		font-size: var(--text-caption);
+		font-weight: var(--weight-label);
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+		line-height: 1.2;
+		color: var(--color-yellow);
+		margin: 0;
+	}
+
 	.shell {
 		width: 100%;
-		max-width: 78rem;
+		max-width: var(--page-max);
 		margin-inline: auto;
 		padding-inline: clamp(1.25rem, 5vw, 4.5rem);
 	}
 
-	/* Section headings share one voice: wide, heavy, tight-leaded. */
+	/* Section headings share one voice: wide, weightless, tight-leaded. The
+	   width axis does the work the weight axis used to. */
 	.head {
 		font-family: var(--font-display);
-		font-variation-settings: "wdth" 118, "wght" 760;
-		font-size: clamp(2.1rem, 5.4vw, 4.2rem);
-		line-height: 0.95;
-		letter-spacing: -0.02em;
+		font-variation-settings: "wdth" 118, "wght" 400;
+		font-size: var(--text-heading-lg);
+		font-weight: 400;
+		line-height: 1.02;
+		letter-spacing: var(--tracking-display);
 		margin: 0;
 		text-wrap: balance;
+	}
+
+	/* Body copy runs light. The reference sets 200; at this size, on ink
+	   rather than pure black, Archivo 200 goes anemic — 300 keeps the air
+	   without dropping the stems out from under the reader. */
+	.lede {
+		margin: 0;
+		font-size: var(--text-body);
+		font-weight: var(--weight-body);
+		line-height: 1.5;
+		color: var(--color-paper-2);
+		text-wrap: pretty;
+	}
+
+	/* One button, two forms. The filled pill is cyan and appears once per
+	   view; everything else is a ghost. */
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-2);
+		padding: var(--space-2) var(--space-4);
+		border: 1px solid transparent;
+		border-radius: var(--radius-pill);
+		font-family: var(--font-mono);
+		font-size: 0.6875rem;
+		font-weight: 500;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		text-decoration: none;
+		white-space: nowrap;
+		transition:
+			background-color 0.25s ease,
+			color 0.25s ease,
+			border-color 0.25s ease,
+			transform 0.25s ease;
+	}
+
+	.btn:hover {
+		transform: translateY(-2px);
+	}
+
+	.btn-primary {
+		background: var(--color-cyan);
+		border-color: var(--color-cyan);
+		color: var(--color-ink);
+	}
+
+	.btn-primary:hover {
+		background: var(--color-paper);
+		border-color: var(--color-paper);
+	}
+
+	.btn-ghost {
+		color: var(--color-paper);
+		padding-inline: var(--space-2);
+	}
+
+	.btn-ghost:hover {
+		color: var(--color-cyan);
+	}
+
+	.btn-date {
+		padding-left: var(--space-2);
+		border-left: 1px solid currentColor;
+		opacity: 0.5;
+		letter-spacing: 0.1em;
+	}
+
+	/* Two columns, asymmetric, alternating down the page. No panels, no
+	   rules, no cells — whitespace is the only separator. */
+	.duo {
+		display: grid;
+		grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+		gap: clamp(2.25rem, 7vw, 6rem);
+		align-items: start;
+	}
+
+	.duo-flip > :first-child {
+		order: 2;
+	}
+
+	@media (max-width: 880px) {
+		.duo {
+			grid-template-columns: 1fr;
+		}
+
+		.duo-flip > :first-child {
+			order: 0;
+		}
 	}
 }
 
