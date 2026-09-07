@@ -1,11 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 128 128">
-    <path class="chevron" d="M16 27 L53 64 L16 101" stroke-width="13" stroke-linecap="square" stroke-linejoin="miter" />
-    <rect class="block" x="69" y="21" width="43" height="86" />
-    <style>
-        .chevron { stroke: #3a3a3a; }
-        .block { fill: #4bd97a; }
-        @media (prefers-color-scheme: dark) {
-            .chevron { stroke: #e6e6e6; }
-        }
-    </style>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+    <rect width="128" height="128" rx="20" fill="#0b0b0b"/>
+    <path d="M20 34 L48 64 L20 94" fill="none" stroke="#e6e6e6" stroke-width="17"
+          stroke-linecap="square" stroke-linejoin="miter"/>
+    <rect x="76" y="26" width="34" height="76" fill="#4bd97a"/>
 </svg>
