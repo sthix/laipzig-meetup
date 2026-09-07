@@ -17,25 +17,25 @@ import { NEXT } from '../data/meetup';
 		</h1>
 
 		<div class="say">
-			<p class="label hero-label">AI meetup &mdash; open to anyone</p>
+			<p class="label hero-label">Monthly AI meetup in Leipzig</p>
 
 			<p class="lede">
-				Agents, harnesses, models, and whatever you dragged in
-				half&#8209;working. No gatekeeping, no required background &mdash; just
-				people who find this stuff interesting.
+				A monthly meetup for people working with AI in and around Leipzig
+				&mdash; developers, researchers, students, and anyone curious about the
+				field. Free to attend, with no background assumed.
 			</p>
 
 			<div class="actions">
 				<a class="btn btn-primary" href="#next">
-					Come to the next one
+					Attend the next meetup
 					<span class="btn-date">{NEXT.short}</span>
 				</a>
-				<a class="btn btn-ghost" href="#topics">See what we talk about</a>
+				<a class="btn btn-ghost" href="#topics">See the topics</a>
 			</div>
 		</div>
 	</div>
 
-	<a class="scroll-cue" href="#why" aria-label="Scroll to why this exists">
+	<a class="scroll-cue" href="#about" aria-label="Scroll to the about section">
 		<span class="micro">Scroll</span>
 		<span class="cue-line" aria-hidden="true"></span>
 	</a>
@@ -234,6 +234,13 @@ import { NEXT } from '../data/meetup';
 		}
 
 		.tick {
+			display: none;
+		}
+	}
+
+	/* On a short viewport the hero column runs down into the cue's corner. */
+	@media (max-height: 700px) {
+		.scroll-cue {
 			display: none;
 		}
 	}

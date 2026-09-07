@@ -23,53 +23,53 @@ export const LINKS = {
 	email: 'mailto:hallo@laipzig.dev',
 };
 
-/** Ordered roughly by when the field invented each one. The stagger is the point. */
+/** Ordered roughly by when the field developed each one. */
 export const TOPICS = [
 	{
 		name: 'Machine learning',
-		note: 'The older, sturdier half of the field. Still where most problems actually get solved.',
+		note: 'The established core of the field, and still where most production problems are solved.',
 	},
 	{
 		name: 'LLMs',
-		note: 'Prompting, context, fine-tuning, and the parts nobody agrees on yet.',
+		note: 'Prompting, context design, fine-tuning, and evaluating language models in practice.',
 	},
 	{
 		name: 'Harnesses',
-		note: 'The scaffolding around the model. Usually where the real engineering is.',
+		note: 'The tooling and scaffolding around a model, where much of the engineering effort sits.',
 	},
 	{
 		name: 'Agents',
-		note: 'Planning loops, tool use, and the long tail of things that go wrong at step nine.',
+		note: 'Planning loops, tool use, and the failure modes that appear in long-running tasks.',
 	},
 	{
 		name: 'Evals',
-		note: 'How you know it works. Or that it quietly stopped working last Tuesday.',
+		note: 'Measuring whether a system works, and noticing when it stops working.',
 	},
 	{
-		name: "Whatever's new",
-		note: "Half of every night is something that didn't exist at the last one.",
+		name: 'New developments',
+		note: 'Recent releases and research, covered as they appear.',
 	},
 ];
 
 export const SCHEDULE = [
 	{
 		time: '19:00',
-		name: 'Doors',
-		note: 'Come early. There is usually someone already arguing.',
+		name: 'Doors open',
+		note: 'Arrive, sign in, and meet the other attendees.',
 	},
 	{
 		time: '19:30',
 		name: 'Two talks',
-		note: 'Twenty minutes each. Slides optional, opinions encouraged.',
+		note: 'Twenty minutes each, on practical work by members of the group.',
 	},
 	{
 		time: '20:15',
-		name: 'Demo slot',
-		note: 'Anything half-working. Especially if it is half-working.',
+		name: 'Demos',
+		note: 'An open slot for work in progress. Finished projects are not required.',
 	},
 	{
 		time: '21:00',
-		name: 'The pub',
-		note: 'Where the actual information gets exchanged.',
+		name: 'Informal drinks',
+		note: 'Continued discussion at a venue nearby.',
 	},
 ];
