@@ -14,8 +14,7 @@ import { TOPICS } from '../data/meetup';
 			{
 				TOPICS.map((topic, i) => (
 					<li class="voice rise" style={`--rise-delay: ${i * 70}ms`}>
-						<span class="entry" aria-hidden="true" />
-						<h3 class="name">{topic.name}</h3>
+						<h3 class="name"><span>{topic.name}</span></h3>
 						<p class="note">{topic.note}</p>
 					</li>
 				))
@@ -43,29 +42,11 @@ import { TOPICS } from '../data/meetup';
 	   and made the column impossible to read down. Whitespace separates them
 	   now, and nothing on this list moves horizontally. */
 	.voice {
-		position: relative;
 		display: grid;
 		grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
 		gap: clamp(var(--space-2), 4vw, var(--space-6));
 		align-items: baseline;
 		padding: clamp(var(--space-3), 2.6vw, var(--space-5)) 0;
-	}
-
-	/* A cursor parked against the hovered row. One colour, because a cursor
-	   is one colour — this used to cycle through three. */
-	.entry {
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 1px;
-		height: 100%;
-		background: var(--color-added);
-		opacity: 0;
-		transform: scaleY(0.3);
-		transform-origin: top;
-		transition:
-			opacity 0.35s ease,
-			transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
 	/* 400 throughout. Hover opens the width axis, never the weight axis. */
@@ -80,6 +61,22 @@ import { TOPICS } from '../data/meetup';
 		transition: font-variation-settings 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
+	/* The hovered row underlines itself, the rule growing from the left to
+	   the measure of the name. Drawn as a background rather than a border so
+	   it spans the text and not the grid column, and so its width is a single
+	   animatable property. */
+	.name span {
+		background-image: linear-gradient(var(--color-added), var(--color-added));
+		background-repeat: no-repeat;
+		background-size: 0 2px;
+		background-position: 0 1.08em;
+		transition: background-size 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.voice:hover .name span {
+		background-size: 100% 2px;
+	}
+
 	.note {
 		margin: 0;
 		color: var(--color-fg-3);
@@ -89,11 +86,6 @@ import { TOPICS } from '../data/meetup';
 		max-width: 40ch;
 		text-wrap: pretty;
 		transition: color 0.3s ease;
-	}
-
-	.voice:hover .entry {
-		opacity: 1;
-		transform: scaleY(1);
 	}
 
 	.voice:hover .name {
