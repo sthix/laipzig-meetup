@@ -21,7 +21,7 @@ export const NEXT = {
 };
 
 export const LINKS = {
-	github: '#',
+	github: 'https://github.com/sthix/laipzig-meetup',
 	email: 'mailto:laipzig@pm.me',
 };
 
