@@ -55,24 +55,25 @@ export const TOPICS = [
 	},
 ];
 
+/**
+ * The order of an evening, not its clock. No start time is fixed yet, so
+ * these carry no times — Evening.astro numbers them from their position, and
+ * the order here is the order shown.
+ */
 export const SCHEDULE = [
 	{
-		time: '19:00',
 		name: 'Doors open',
 		note: 'Arrive, sign in, and meet the other attendees.',
 	},
 	{
-		time: '19:30',
 		name: 'Two talks',
 		note: 'Twenty minutes each, on practical work by members of the group.',
 	},
 	{
-		time: '20:15',
 		name: 'Demos',
 		note: 'An open slot for work in progress. Finished projects are not required.',
 	},
 	{
-		time: '21:00',
 		name: 'Informal drinks',
 		note: 'Continued discussion at a venue nearby.',
 	},

@@ -5,7 +5,7 @@ import { SCHEDULE } from '../data/meetup';
 
 <section class="section" id="evening">
 	<div class="shell">
-		<SectionHead label="Format" note="A typical evening; timings vary" />
+		<SectionHead label="Format" note="The usual order of an evening" />
 
 		{/* Flipped against the section above it: the big type moves to the
 		    right-hand column so the page reads as a zigzag, not a stack. */}
@@ -16,7 +16,7 @@ import { SCHEDULE } from '../data/meetup';
 				{
 					SCHEDULE.map((slot, i) => (
 						<li class="slot rise" style={`--rise-delay: ${i * 80}ms`}>
-							<time class="clock">{slot.time}</time>
+							<span class="step">{String(i + 1).padStart(2, '0')}</span>
 							<div class="what">
 								<h3 class="name">{slot.name}</h3>
 								<p class="note">{slot.note}</p>
@@ -38,7 +38,7 @@ import { SCHEDULE } from '../data/meetup';
 	}
 
 	/* Was a four-up grid of bordered cells. Cells are gone: the slots float on
-	   the ink and the clock column alone holds the alignment. */
+	   the ground and the step column alone holds the alignment. */
 	.score {
 		list-style: none;
 		margin: 0;
@@ -51,12 +51,15 @@ import { SCHEDULE } from '../data/meetup';
 
 	.slot {
 		display: grid;
-		grid-template-columns: 4.5rem minmax(0, 1fr);
+		grid-template-columns: 2.25rem minmax(0, 1fr);
 		gap: var(--space-3);
 		align-items: baseline;
 	}
 
-	.clock {
+	/* Was the clock. Nothing is scheduled, so the column counts the steps
+	   instead — which reads as a gutter's line numbers, the same place the
+	   diff marks sit elsewhere on the page. */
+	.step {
 		font-family: var(--font-mono);
 		font-size: var(--text-caption);
 		font-weight: 500;
