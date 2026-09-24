@@ -21,10 +21,9 @@ export const NEXT = {
 };
 
 export const LINKS = {
-	announce: '#', // mailing list / meetup.com event page
-	meetup: '#',
+	announce: '#', // mailing list / announcement page
 	github: '#',
-	email: 'mailto:hallo@laipzig.dev',
+	email: 'mailto:laipzig@pm.me',
 };
 
 /** Ordered roughly by when the field developed each one. */
