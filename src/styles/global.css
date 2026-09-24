@@ -218,13 +218,6 @@
 		color: var(--color-added);
 	}
 
-	.btn-date {
-		padding-left: var(--space-2);
-		border-left: 1px solid currentColor;
-		opacity: 0.5;
-		letter-spacing: 0.1em;
-	}
-
 	/* Two columns, asymmetric, alternating down the page. No panels, no
 	   rules, no cells — whitespace is the only separator. */
 	.duo {

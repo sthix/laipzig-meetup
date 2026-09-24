@@ -1,17 +1,21 @@
 /**
  * Everything that changes between meetups lives here.
- * Replace these values when the next date is fixed.
+ *
+ * Nothing is scheduled yet, so this carries no date. When the first one is
+ * fixed, add these fields back and NextMeetup.astro can fill the slot that
+ * currently reads "to be announced":
+ *
+ *   iso      ISO 8601 start — restores the <time datetime> element
+ *   day      the numeral, set at display size
+ *   month    the month name beneath it
+ *   weekday  }
+ *   time     }  the micro line above the body copy, alongside city
+ *   year     }
+ *   short    a badge on the Hero and SiteNav pills — the span and its
+ *            .btn-date style came out with the date and need restoring too
  */
 
 export const NEXT = {
-	/** ISO date of the next meetup — drives the <time> element. */
-	iso: '2026-09-24T19:00:00+02:00',
-	weekday: 'Wednesday',
-	day: '24',
-	month: 'September',
-	year: '2026',
-	time: '19:00',
-	short: '24 Sep',
 	/** Venue is announced per meetup — see NextMeetup.astro if that changes. */
 	city: 'Leipzig',
 };

@@ -5,11 +5,13 @@ import { NEXT, LINKS } from '../data/meetup';
 <section class="section" id="next">
 	<div class="shell">
 		<div class="duo rise">
-			{/* Drawn but not filled — the figure the page is counting down to. */}
-			<time class="date" datetime={NEXT.iso}>
-				<span class="day">{NEXT.day}</span>
-				<span class="month">{NEXT.month}</span>
-			</time>
+			{/* Drawn but not filled. Nothing is scheduled yet, so the slot the
+			    section is built around says so rather than standing empty — and
+			    it is no longer a <time>, having nothing to put in datetime. */}
+			<p class="date">
+				<span class="day">Date</span>
+				<span class="month">to be announced</span>
+			</p>
 
 			<div class="say">
 				<div class="top">
@@ -17,16 +19,12 @@ import { NEXT, LINKS } from '../data/meetup';
 					<span class="live"><i aria-hidden="true"></i>Open to all</span>
 				</div>
 
-				<p class="meta micro">
-					{NEXT.weekday} &middot; {NEXT.time} &middot; {NEXT.city} &middot; {
-						NEXT.year
-					}
-				</p>
+				<p class="meta micro">{NEXT.city}</p>
 
 				<p class="lede">
-					Attendance is free and no registration is required. The venue is
-					announced with each date &mdash; join the announcement list and it
-					reaches you two weeks in advance.
+					Attendance is free and no registration is required. The date and the
+					venue are announced together &mdash; join the announcement list and
+					they reach you two weeks ahead.
 				</p>
 
 				<a class="btn btn-primary" href={LINKS.announce}>Join the announcement list</a>
