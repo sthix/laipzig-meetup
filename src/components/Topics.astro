@@ -49,7 +49,11 @@ import { TOPICS } from '../data/meetup';
 		padding: clamp(var(--space-3), 2.6vw, var(--space-5)) 0;
 	}
 
-	/* 400 throughout. Hover opens the width axis, never the weight axis. */
+	/* 400 throughout, and the width axis stays put on hover. It used to open to
+	   128, which pushed the longer names past their column and wrapped them —
+	   and a wrapped name puts its second line straight through the rule below.
+	   The underline is the hover affordance now; the row does not also need to
+	   reflow under the pointer. */
 	.name {
 		font-family: var(--font-display);
 		font-variation-settings: 'wdth' 100, 'wght' 400;
@@ -58,7 +62,6 @@ import { TOPICS } from '../data/meetup';
 		line-height: 1.02;
 		letter-spacing: var(--tracking-display);
 		margin: 0;
-		transition: font-variation-settings 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
 	/* The hovered row underlines itself, the rule growing from the left to
@@ -102,10 +105,6 @@ import { TOPICS } from '../data/meetup';
 		max-width: 40ch;
 		text-wrap: pretty;
 		transition: color 0.3s ease;
-	}
-
-	.voice:hover .name {
-		font-variation-settings: 'wdth' 128, 'wght' 400;
 	}
 
 	.voice:hover .note {
