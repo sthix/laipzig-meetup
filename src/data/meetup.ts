@@ -21,7 +21,6 @@ export const NEXT = {
 };
 
 export const LINKS = {
-	announce: '#', // mailing list / announcement page
 	github: '#',
 	email: 'mailto:laipzig@pm.me',
 };

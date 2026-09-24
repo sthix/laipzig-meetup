@@ -1,5 +1,5 @@
 ---
-import { NEXT, LINKS } from '../data/meetup';
+import { NEXT } from '../data/meetup';
 ---
 
 <section class="section" id="next">
@@ -23,11 +23,8 @@ import { NEXT, LINKS } from '../data/meetup';
 
 				<p class="lede">
 					Attendance is free and no registration is required. The date and the
-					venue are announced together &mdash; join the announcement list and
-					they reach you two weeks ahead.
+					venue are announced together, two weeks ahead.
 				</p>
-
-				<a class="btn btn-primary" href={LINKS.announce}>Join the announcement list</a>
 			</div>
 		</div>
 	</div>
@@ -148,16 +145,5 @@ import { NEXT, LINKS } from '../data/meetup';
 
 	.lede {
 		color: var(--color-fg-2);
-	}
-
-	.say > .btn {
-		margin-top: var(--space-1);
-	}
-
-	@media (max-width: 640px) {
-		.say > .btn {
-			width: 100%;
-			justify-content: center;
-		}
 	}
 </style>
