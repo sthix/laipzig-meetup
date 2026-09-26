@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import GyroidField from '../components/GyroidField.astro';
+import SiteNav from '../components/SiteNav.astro';
 import Hero from '../components/Hero.astro';
 import Thesis from '../components/Thesis.astro';
 import Topics from '../components/Topics.astro';
@@ -12,8 +13,9 @@ import SiteFooter from '../components/SiteFooter.astro';
 <Layout>
 	<GyroidField />
 
-	<a class="skip" href="#why">Skip to content</a>
+	<a class="skip" href="#about">Skip to content</a>
 
+	<SiteNav />
 	<Hero />
 
 	<main>
@@ -30,10 +32,11 @@ import SiteFooter from '../components/SiteFooter.astro';
 	.skip {
 		position: absolute;
 		left: -9999px;
-		z-index: 20;
-		padding: 0.75rem 1rem;
-		background: var(--color-paper);
-		color: var(--color-ink);
+		z-index: 30;
+		padding: 0.75rem 1.25rem;
+		border-radius: var(--radius-pill);
+		background: var(--color-added);
+		color: var(--color-screen);
 		font-family: var(--font-mono);
 		font-size: 0.6875rem;
 		letter-spacing: 0.16em;

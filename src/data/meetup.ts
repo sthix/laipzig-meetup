@@ -1,75 +1,78 @@
 /**
  * Everything that changes between meetups lives here.
- * Replace these values when the next date is fixed.
+ *
+ * Nothing is scheduled yet, so this carries no date. When the first one is
+ * fixed, add these fields back and NextMeetup.astro can fill the slot that
+ * currently reads "to be announced":
+ *
+ *   iso      ISO 8601 start — restores the <time datetime> element
+ *   day      the numeral, set at display size
+ *   month    the month name beneath it
+ *   weekday  }
+ *   time     }  the micro line above the body copy, alongside city
+ *   year     }
+ *   short    a badge on the Hero and SiteNav pills — the span and its
+ *            .btn-date style came out with the date and need restoring too
  */
 
 export const NEXT = {
-	/** ISO date of the next meetup — drives the <time> element. */
-	iso: '2026-09-24T19:00:00+02:00',
-	weekday: 'Wednesday',
-	day: '24',
-	month: 'September',
-	year: '2026',
-	time: '19:00',
-	short: '24 Sep',
 	/** Venue is announced per meetup — see NextMeetup.astro if that changes. */
 	city: 'Leipzig',
 };
 
 export const LINKS = {
-	announce: '#', // mailing list / meetup.com event page
-	meetup: '#',
-	github: '#',
-	email: 'mailto:hallo@laipzig.dev',
+	github: 'https://github.com/sthix/laipzig-meetup',
+	email: 'mailto:laipzig@pm.me',
 };
 
-/** Ordered roughly by when the field invented each one. The stagger is the point. */
+/** Ordered roughly by when the field developed each one. */
 export const TOPICS = [
 	{
 		name: 'Machine learning',
-		note: 'The older, sturdier half of the field. Still where most problems actually get solved.',
+		note: 'The established core of the field, and still where most production problems are solved.',
 	},
 	{
 		name: 'LLMs',
-		note: 'Prompting, context, fine-tuning, and the parts nobody agrees on yet.',
+		note: 'Prompting, context design, fine-tuning, and evaluating language models in practice.',
 	},
 	{
 		name: 'Harnesses',
-		note: 'The scaffolding around the model. Usually where the real engineering is.',
+		note: 'The tooling and scaffolding around a model, where much of the engineering effort sits.',
 	},
 	{
 		name: 'Agents',
-		note: 'Planning loops, tool use, and the long tail of things that go wrong at step nine.',
+		note: 'Planning loops, tool use, and the failure modes that appear in long-running tasks.',
 	},
 	{
 		name: 'Evals',
-		note: 'How you know it works. Or that it quietly stopped working last Tuesday.',
+		note: 'Measuring whether a system works, and noticing when it stops working.',
 	},
 	{
-		name: "Whatever's new",
-		note: "Half of every night is something that didn't exist at the last one.",
+		name: 'New developments',
+		note: 'Recent releases and research, covered as they appear.',
 	},
 ];
 
+/**
+ * The order of an evening, not its clock. No start time is fixed yet, so
+ * these carry no times — Evening.astro numbers them from their position, and
+ * the order here is the order shown.
+ */
 export const SCHEDULE = [
 	{
-		time: '19:00',
-		name: 'Doors',
-		note: 'Come early. There is usually someone already arguing.',
+		name: 'Doors open',
+		note: 'Arrive, sign in, and meet the other attendees.',
 	},
 	{
-		time: '19:30',
 		name: 'Two talks',
-		note: 'Twenty minutes each. Slides optional, opinions encouraged.',
+		note: 'Twenty minutes each, on practical work by members of the group.',
 	},
 	{
-		time: '20:15',
-		name: 'Demo slot',
-		note: 'Anything half-working. Especially if it is half-working.',
+		name: 'Demos',
+		note: 'An open slot for work in progress. Finished projects are not required.',
 	},
 	{
-		time: '21:00',
-		name: 'The pub',
-		note: 'Where the actual information gets exchanged.',
+		name: 'Informal drinks',
+		note: 'Continued discussion at a venue nearby.',
 	},
 ];

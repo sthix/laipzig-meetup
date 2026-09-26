@@ -1,24 +1,76 @@
 @import "tailwindcss";
 
 @theme {
-	/* Ink — the ground. Iron-gall black, pulled slightly violet. */
-	--color-ink: #08060f;
-	--color-ink-2: #100c1c;
-	--color-ink-3: #1a1329;
+	/* Screen — the ground. Near-black and neutral: a terminal with nothing
+	   printed on it yet. */
+	--color-screen: #0b0b0b;
+	--color-screen-2: #141414;
+	--color-screen-3: #1e1e1e;
 
-	/* Paper — warm rag stock, the only "white" on the page. */
-	--color-paper: #efe9dc;
-	--color-paper-2: #b3aabf;
-	--color-paper-3: #7a7189;
+	/* Foreground — what the screen is showing. */
+	--color-fg: #e6e6e6;
+	--color-fg-2: #a8a8a8;
+	--color-fg-3: #858585;
 
-	/* The three plates. Process inks, not neon. */
-	--color-cyan: #00c2e8;
-	--color-magenta: #ec008c;
-	--color-yellow: #ffd447;
+	/* The diff gutter. Three colours with jobs rather than three decorations:
+	   added carries every action and the caret, changed marks every section
+	   label, removed is held back for attention alone. */
+	--color-added: #4bd97a;
+	--color-changed: #e0a53c;
+	--color-removed: #f0614d;
 
 	--font-display: "Anybody", "Arial Black", system-ui, sans-serif;
 	--font-body: "Archivo", system-ui, -apple-system, sans-serif;
 	--font-mono: "Martian Mono", ui-monospace, "SF Mono", monospace;
+}
+
+/* Layout tokens sit outside @theme deliberately: --spacing-* declared in there
+   would redefine Tailwind's own scale, and this page is styled in component
+   CSS rather than utilities. */
+:root {
+	/* Type scale — the reference's steps in rem, fluid where they are display
+	   sizes so the 113px top end survives a phone. */
+	--text-caption: 0.75rem; /* 12 */
+	--text-nav: 0.875rem; /* 14 */
+	--text-body: 1.125rem; /* 18 */
+	--text-heading-2xs: 1.5rem; /* 24 */
+	--text-heading-xs: 1.6875rem; /* 27 */
+	--text-subheading: clamp(1.5rem, 3.2vw, 2.25rem); /* → 36 */
+	--text-heading-sm: clamp(1.75rem, 4.2vw, 2.625rem); /* → 42 */
+	--text-heading: clamp(2rem, 5vw, 3rem); /* → 48 */
+	--text-heading-lg: clamp(2.4rem, 6.4vw, 4.875rem); /* → 78 */
+	--text-display: clamp(3.25rem, 11.4vw, 7.0625rem); /* → 113 */
+
+	/* Hierarchy is carried by scale and tracking, never by weight. Every
+	   display size sits at 400; only labels are allowed to go heavy. */
+	--weight-display: 400;
+	--weight-body: 300;
+	--weight-label: 600;
+	--tracking-display: -0.04em;
+	--tracking-label: 0.025em;
+
+	/* 6px base unit. */
+	--space-1: 0.375rem;
+	--space-2: 0.75rem;
+	--space-3: 1.125rem;
+	--space-4: 1.5rem;
+	--space-5: 1.875rem;
+	--space-6: 2.25rem;
+	--space-10: 3.75rem;
+	--space-16: 6rem;
+	--space-20: 7.5rem;
+
+	/* The selection band hugs the capitals rather than filling the em box.
+	   Anybody puts 12% of the box above the caps and 23% below the baseline,
+	   so a full-box highlight is a third empty — invisible at 14px, a slab at
+	   250px. Measured from the font: caps run 0.66em, starting 0.12em down. */
+	--select-band: 0.79em;
+	--select-top: 0.06em;
+
+	--section-gap: clamp(3.75rem, 10vw, 7.5rem);
+	--page-max: 80rem;
+	--radius: 1.5rem;
+	--radius-pill: 9999px;
 }
 
 @layer base {
@@ -33,25 +85,28 @@
 
 	body {
 		margin: 0;
-		background: var(--color-ink);
-		color: var(--color-paper);
+		background: var(--color-screen);
+		color: var(--color-fg);
 		font-family: var(--font-body);
-		font-size: 1rem;
-		line-height: 1.6;
+		font-size: var(--text-body);
+		font-weight: var(--weight-body);
+		line-height: 1.5;
 		font-synthesis-weight: none;
 		-webkit-font-smoothing: antialiased;
 		overflow-x: hidden;
 	}
 
+	/* The page's emphasis mechanic is a selection, so a real selection uses
+	   the same two colours. */
 	::selection {
-		background: var(--color-magenta);
-		color: var(--color-paper);
+		background: var(--color-added);
+		color: var(--color-screen);
 	}
 
 	:focus-visible {
-		outline: 2px solid var(--color-cyan);
+		outline: 2px solid var(--color-added);
 		outline-offset: 3px;
-		border-radius: 1px;
+		border-radius: 2px;
 	}
 
 	a {
@@ -60,7 +115,7 @@
 }
 
 @layer components {
-	/* Microtype: the printer's marginalia. Always tiny, always tracked out. */
+	/* Microtype: the status line. Always tiny, always tracked out. */
 	.micro {
 		font-family: var(--font-mono);
 		font-size: 0.625rem;
@@ -68,25 +123,122 @@
 		letter-spacing: 0.24em;
 		text-transform: uppercase;
 		line-height: 1.4;
-		color: var(--color-paper-3);
+		color: var(--color-fg-3);
+	}
+
+	/* The section label: small, uppercase, and the only place the changed
+	   colour appears as type. */
+	.label {
+		font-family: var(--font-mono);
+		font-size: var(--text-caption);
+		font-weight: var(--weight-label);
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+		line-height: 1.2;
+		color: var(--color-changed);
+		margin: 0;
 	}
 
 	.shell {
 		width: 100%;
-		max-width: 78rem;
+		max-width: var(--page-max);
 		margin-inline: auto;
 		padding-inline: clamp(1.25rem, 5vw, 4.5rem);
 	}
 
-	/* Section headings share one voice: wide, heavy, tight-leaded. */
+	/* Section headings share one voice: wide, weightless, tight-leaded. The
+	   width axis does the work the weight axis used to. */
 	.head {
 		font-family: var(--font-display);
-		font-variation-settings: "wdth" 118, "wght" 760;
-		font-size: clamp(2.1rem, 5.4vw, 4.2rem);
-		line-height: 0.95;
-		letter-spacing: -0.02em;
+		font-variation-settings: "wdth" 118, "wght" 400;
+		font-size: var(--text-heading-lg);
+		font-weight: 400;
+		line-height: 1.02;
+		letter-spacing: var(--tracking-display);
 		margin: 0;
 		text-wrap: balance;
+	}
+
+	/* Body copy runs light. The reference sets 200; Archivo at 200 goes
+	   anemic against this ground — 300 keeps the air without dropping the
+	   stems out from under the reader. */
+	.lede {
+		margin: 0;
+		font-size: var(--text-body);
+		font-weight: var(--weight-body);
+		line-height: 1.5;
+		color: var(--color-fg-2);
+		text-wrap: pretty;
+	}
+
+	/* One button, two forms. The filled pill takes the added colour and shows
+	   once per view; everything else is a ghost. */
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-2);
+		padding: var(--space-2) var(--space-4);
+		border: 1px solid transparent;
+		border-radius: var(--radius-pill);
+		font-family: var(--font-mono);
+		font-size: 0.6875rem;
+		font-weight: 500;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		text-decoration: none;
+		white-space: nowrap;
+		transition:
+			background-color 0.25s ease,
+			color 0.25s ease,
+			border-color 0.25s ease,
+			transform 0.25s ease;
+	}
+
+	.btn:hover {
+		transform: translateY(-2px);
+	}
+
+	.btn-primary {
+		background: var(--color-added);
+		border-color: var(--color-added);
+		color: var(--color-screen);
+	}
+
+	.btn-primary:hover {
+		background: var(--color-fg);
+		border-color: var(--color-fg);
+	}
+
+	.btn-ghost {
+		color: var(--color-fg);
+		padding-inline: var(--space-2);
+	}
+
+	.btn-ghost:hover {
+		color: var(--color-added);
+	}
+
+	/* Two columns, asymmetric, alternating down the page. No panels, no
+	   rules, no cells — whitespace is the only separator. */
+	.duo {
+		display: grid;
+		grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+		gap: clamp(2.25rem, 7vw, 6rem);
+		align-items: start;
+	}
+
+	.duo-flip > :first-child {
+		order: 2;
+	}
+
+	@media (max-width: 880px) {
+		.duo {
+			grid-template-columns: 1fr;
+		}
+
+		.duo-flip > :first-child {
+			order: 0;
+		}
 	}
 }
 
